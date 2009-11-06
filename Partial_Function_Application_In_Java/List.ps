@@ -1,0 +1,968 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 24 24 571 818
+%%Title: Enscript Output
+%%For: Jennifer Freeman
+%%Creator: GNU enscript 1.6.1
+%%CreationDate: Thu Feb  7 12:32:16 2002
+%%Orientation: Portrait
+%%Pages: (atend)
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: (atend)
+%%EndComments
+%%BeginProlog
+%%BeginResource: procset Enscript-Prolog 1.6 1
+%
+% Procedures.
+%
+
+/_S {	% save current state
+  /_s save def
+} def
+/_R {	% restore from saved state
+  _s restore
+} def
+
+/S {	% showpage protecting gstate
+  gsave
+  showpage
+  grestore
+} bind def
+
+/MF {	% fontname newfontname -> -	make a new encoded font
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  % insert only valid encoding vectors
+  encoding_vector length 256 eq {
+    newfont /Encoding encoding_vector put
+  } if
+
+  newfontname newfont definefont pop
+} def
+
+/SF { % fontname width height -> -	set a new font
+  /height exch def
+  /width exch def
+
+  findfont
+  [width 0 0 height 0 0] makefont setfont
+} def
+
+/SUF { % fontname width height -> -	set a new user font
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF
+  /F-gs-user-font width height SF
+} def
+
+/M {moveto} bind def
+/s {show} bind def
+
+/Box {	% x y w h -> -			define box path
+  /d_h exch def /d_w exch def /d_y exch def /d_x exch def
+  d_x d_y  moveto
+  d_w 0 rlineto
+  0 d_h rlineto
+  d_w neg 0 rlineto
+  closepath
+} def
+
+/bgs {	% x y height blskip gray str -> -	show string with bg color
+  /str exch def
+  /gray exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    gray setgray
+    fill
+  grestore
+  x y M str s
+} def
+
+% Highlight bars.
+/highlight_bars {	% nlines lineheight output_y_margin gray -> -
+  gsave
+    setgray
+    /ymarg exch def
+    /lineheight exch def
+    /nlines exch def
+
+    % This 2 is just a magic number to sync highlight lines to text.
+    0 d_header_y ymarg sub 2 sub translate
+
+    /cw d_output_w cols div def
+    /nrows d_output_h ymarg 2 mul sub lineheight div cvi def
+
+    % for each column
+    0 1 cols 1 sub {
+      cw mul /xp exch def
+
+      % for each rows
+      0 1 nrows 1 sub {
+        /rn exch def
+        rn lineheight mul neg /yp exch def
+        rn nlines idiv 2 mod 0 eq {
+	  % Draw highlight bar.  4 is just a magic indentation.
+	  xp 4 add yp cw 8 sub lineheight neg Box fill
+	} if
+      } for
+    } for
+
+  grestore
+} def
+
+% Line highlight bar.
+/line_highlight {	% x y width height gray -> -
+  gsave
+    /gray exch def
+    Box gray setgray fill
+  grestore
+} def
+
+% Column separator lines.
+/column_lines {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h translate
+    /cw d_output_w cols div def
+    1 1 cols 1 sub {
+      cw mul 0 moveto
+      0 d_output_h rlineto stroke
+    } for
+  grestore
+} def
+
+% Column borders.
+/column_borders {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h moveto
+    0 d_output_h rlineto
+    d_output_w 0 rlineto
+    0 d_output_h neg rlineto
+    closepath stroke
+  grestore
+} def
+
+% Do the actual underlay drawing
+/draw_underlay {
+  ul_style 0 eq {
+    ul_str true charpath stroke
+  } {
+    ul_str show
+  } ifelse
+} def
+
+% Underlay
+/underlay {	% - -> -
+  gsave
+    0 d_page_h translate
+    d_page_h neg d_page_w atan rotate
+
+    ul_gray setgray
+    ul_font setfont
+    /dw d_page_h dup mul d_page_w dup mul add sqrt def
+    ul_str stringwidth pop dw exch sub 2 div ul_h_ptsize -2 div moveto
+    draw_underlay
+  grestore
+} def
+
+/user_underlay {	% - -> -
+  gsave
+    ul_x ul_y translate
+    ul_angle rotate
+    ul_gray setgray
+    ul_font setfont
+    0 0 ul_h_ptsize 2 div sub moveto
+    draw_underlay
+  grestore
+} def
+
+% Page prefeed
+/page_prefeed {		% bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} def
+
+% Wrapped line markers
+/wrapped_line_mark {	% x y charwith charheight type -> -
+  /type exch def
+  /h exch def
+  /w exch def
+  /y exch def
+  /x exch def
+
+  type 2 eq {
+    % Black boxes (like TeX does)
+    gsave
+      0 setlinewidth
+      x w 4 div add y M
+      0 h rlineto w 2 div 0 rlineto 0 h neg rlineto
+      closepath fill
+    grestore
+  } {
+    type 3 eq {
+      % Small arrows
+      gsave
+        .2 setlinewidth
+        x w 2 div add y h 2 div add M
+        w 4 div 0 rlineto
+        x w 4 div add y lineto stroke
+
+        x w 4 div add w 8 div add y h 4 div add M
+        x w 4 div add y lineto
+	w 4 div h 8 div rlineto stroke
+      grestore
+    } {
+      % do nothing
+    } ifelse
+  } ifelse
+} def
+
+% EPSF import.
+
+/BeginEPSF {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack
+  userdict begin
+  /showpage { } def
+  0 setgray 0 setlinecap
+  1 setlinewidth 0 setlinejoin
+  10 setmiterlimit [ ] 0 setdash newpath
+  /languagelevel where {
+    pop languagelevel
+    1 ne {
+      false setstrokeadjust false setoverprint
+    } if
+  } if
+} bind def
+
+/EndEPSF {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+%%EndResource
+%%BeginResource: procset Enscript-Encoding-88591 1.6 1
+/encoding_vector [
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclam       	/quotedbl     	/numbersign   	
+/dollar       	/percent      	/ampersand    	/quoteright   	
+/parenleft    	/parenright   	/asterisk     	/plus         	
+/comma        	/hyphen       	/period       	/slash        	
+/zero         	/one          	/two          	/three        	
+/four         	/five         	/six          	/seven        	
+/eight        	/nine         	/colon        	/semicolon    	
+/less         	/equal        	/greater      	/question     	
+/at           	/A            	/B            	/C            	
+/D            	/E            	/F            	/G            	
+/H            	/I            	/J            	/K            	
+/L            	/M            	/N            	/O            	
+/P            	/Q            	/R            	/S            	
+/T            	/U            	/V            	/W            	
+/X            	/Y            	/Z            	/bracketleft  	
+/backslash    	/bracketright 	/asciicircum  	/underscore   	
+/quoteleft    	/a            	/b            	/c            	
+/d            	/e            	/f            	/g            	
+/h            	/i            	/j            	/k            	
+/l            	/m            	/n            	/o            	
+/p            	/q            	/r            	/s            	
+/t            	/u            	/v            	/w            	
+/x            	/y            	/z            	/braceleft    	
+/bar          	/braceright   	/tilde        	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclamdown   	/cent         	/sterling     	
+/currency     	/yen          	/brokenbar    	/section      	
+/dieresis     	/copyright    	/ordfeminine  	/guillemotleft	
+/logicalnot   	/hyphen       	/registered   	/macron       	
+/degree       	/plusminus    	/twosuperior  	/threesuperior	
+/acute        	/mu           	/paragraph    	/bullet       	
+/cedilla      	/onesuperior  	/ordmasculine 	/guillemotright	
+/onequarter   	/onehalf      	/threequarters	/questiondown 	
+/Agrave       	/Aacute       	/Acircumflex  	/Atilde       	
+/Adieresis    	/Aring        	/AE           	/Ccedilla     	
+/Egrave       	/Eacute       	/Ecircumflex  	/Edieresis    	
+/Igrave       	/Iacute       	/Icircumflex  	/Idieresis    	
+/Eth          	/Ntilde       	/Ograve       	/Oacute       	
+/Ocircumflex  	/Otilde       	/Odieresis    	/multiply     	
+/Oslash       	/Ugrave       	/Uacute       	/Ucircumflex  	
+/Udieresis    	/Yacute       	/Thorn        	/germandbls   	
+/agrave       	/aacute       	/acircumflex  	/atilde       	
+/adieresis    	/aring        	/ae           	/ccedilla     	
+/egrave       	/eacute       	/ecircumflex  	/edieresis    	
+/igrave       	/iacute       	/icircumflex  	/idieresis    	
+/eth          	/ntilde       	/ograve       	/oacute       	
+/ocircumflex  	/otilde       	/odieresis    	/divide       	
+/oslash       	/ugrave       	/uacute       	/ucircumflex  	
+/udieresis    	/yacute       	/thorn        	/ydieresis    	
+] def
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Courier
+/HFpt_w 10 def
+/HFpt_h 10 def
+/Courier-Bold /HF-gs-font MF
+/HF /HF-gs-font findfont [HFpt_w 0 0 HFpt_h 0 0] makefont def
+/Courier /F-gs-font MF
+/F-gs-font 10 10 SF
+/#copies 1 def
+% Pagedevice definitions:
+gs_languagelevel 1 gt {
+  <<
+    /PageSize [595 842] 
+  >> setpagedevice
+} if
+%%BeginResource: procset Enscript-Header-simple 1.6 1
+
+/do_header {	% print default simple header
+  gsave
+    d_header_x d_header_y HFpt_h 3 div add translate
+
+    HF setfont
+    user_header_p {
+      5 0 moveto user_header_left_str show
+
+      d_header_w user_header_center_str stringwidth pop sub 2 div
+      0 moveto user_header_center_str show
+
+      d_header_w user_header_right_str stringwidth pop sub 5 sub
+      0 moveto user_header_right_str show
+    } {
+      5 0 moveto fname show
+      45 0 rmoveto fmodstr show
+      45 0 rmoveto pagenumstr show
+    } ifelse
+
+  grestore
+} def
+%%EndResource
+/d_page_w 547 def
+/d_page_h 794 def
+/d_header_x 0 def
+/d_header_y 779 def
+/d_header_w 547 def
+/d_header_h 15 def
+/d_footer_x 0 def
+/d_footer_y 0 def
+/d_footer_w 547 def
+/d_footer_h 0 def
+/d_output_w 547 def
+/d_output_h 779 def
+/cols 1 def
+%%EndSetup
+%%Page: (1) 1
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 1 def
+/fname (List.java) def
+/fdir () def
+/ftail (List.java) def
+% User defined strings:
+/fmodstr (Tue Dec 04 17:21:01 2001) def
+/pagenumstr (1) def
+/user_header_p true def
+/user_header_left_str (Jen Freeman) def
+/user_header_center_str (List.java) def
+/user_header_right_str (1 of 2) def
+%%EndPageSetup
+do_header
+/Courier-Bold 10 10 SUF
+5 766 M
+(import) s
+/F-gs-font 10 10 SF
+41 766 M
+( Partial;) s
+/Courier-Bold 10 10 SUF
+5 755 M
+(import) s
+/F-gs-font 10 10 SF
+41 755 M
+( java.util.Collection;) s
+/Courier-Bold 10 10 SUF
+5 744 M
+(import) s
+/F-gs-font 10 10 SF
+41 744 M
+( java.util.Iterator;) s
+/Courier-Bold 10 10 SUF
+5 733 M
+(public) s
+/F-gs-font 10 10 SF
+41 733 M
+( ) s
+/Courier-Bold 10 10 SUF
+47 733 M
+(abstract) s
+/F-gs-font 10 10 SF
+95 733 M
+( ) s
+/Courier-Bold 10 10 SUF
+101 733 M
+(class) s
+/F-gs-font 10 10 SF
+131 733 M
+( List) s
+5 722 M
+({                                               ) s
+5 711 M
+(   ) s
+/Courier-Bold 10 10 SUF
+23 711 M
+(static) s
+/F-gs-font 10 10 SF
+59 711 M
+( ) s
+/Courier-Bold 10 10 SUF
+65 711 M
+(public) s
+/F-gs-font 10 10 SF
+101 711 M
+( ) s
+/Courier-Bold 10 10 SUF
+107 711 M
+(int) s
+/F-gs-font 10 10 SF
+125 711 M
+( multiply\() s
+/Courier-Bold 10 10 SUF
+185 711 M
+(int) s
+/F-gs-font 10 10 SF
+203 711 M
+( a,) s
+/Courier-Bold 10 10 SUF
+221 711 M
+(int) s
+/F-gs-font 10 10 SF
+239 711 M
+( b\)) s
+5 700 M
+(   {) s
+5 689 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 689 M
+(return) s
+/F-gs-font 10 10 SF
+83 689 M
+( \(a*b\);) s
+5 678 M
+(   }) s
+5 667 M
+(   ) s
+/Courier-Bold 10 10 SUF
+23 667 M
+(public) s
+/F-gs-font 10 10 SF
+59 667 M
+( ) s
+/Courier-Bold 10 10 SUF
+65 667 M
+(static) s
+/F-gs-font 10 10 SF
+101 667 M
+( Object product\(Collection in\) ) s
+/Courier-Bold 10 10 SUF
+287 667 M
+(throws) s
+/F-gs-font 10 10 SF
+323 667 M
+( java.lang.ClassNotFoundException,ja) s
+5 656 M
+(va.lang.NoSuchMethodException,IllegalAccessException, java.lang.reflect.InvocationTargetE) s
+5 645 M
+(xception) s
+5 634 M
+(   {) s
+5 623 M
+(     Partial current;) s
+5 612 M
+(     ) s
+/Courier-Bold 10 10 SUF
+35 612 M
+(return) s
+/F-gs-font 10 10 SF
+71 612 M
+( List.foldl\(in,) s
+/Courier-Bold 10 10 SUF
+161 612 M
+(new) s
+/F-gs-font 10 10 SF
+179 612 M
+( Integer\(1\),) s
+/Courier-Bold 10 10 SUF
+251 612 M
+(new) s
+/F-gs-font 10 10 SF
+269 612 M
+( Partial\() s
+/Courier-Bold 10 10 SUF
+323 612 M
+("multiply") s
+/F-gs-font 10 10 SF
+383 612 M
+(,) s
+/Courier-Bold 10 10 SUF
+389 612 M
+("List") s
+/F-gs-font 10 10 SF
+425 612 M
+(\)\);) s
+5 601 M
+(   }) s
+5 590 M
+(   ) s
+/Courier-Bold 10 10 SUF
+23 590 M
+(static) s
+/F-gs-font 10 10 SF
+59 590 M
+( ) s
+/Courier-Bold 10 10 SUF
+65 590 M
+(public) s
+/F-gs-font 10 10 SF
+101 590 M
+( ) s
+/Courier-Bold 10 10 SUF
+107 590 M
+(int) s
+/F-gs-font 10 10 SF
+125 590 M
+( add\() s
+/Courier-Bold 10 10 SUF
+155 590 M
+(int) s
+/F-gs-font 10 10 SF
+173 590 M
+( a,) s
+/Courier-Bold 10 10 SUF
+191 590 M
+(int) s
+/F-gs-font 10 10 SF
+209 590 M
+( b\)) s
+5 579 M
+(   {) s
+5 568 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 568 M
+(return) s
+/F-gs-font 10 10 SF
+83 568 M
+( \(a+b\);) s
+5 557 M
+(   }) s
+5 546 M
+(   ) s
+/Courier-Bold 10 10 SUF
+23 546 M
+(public) s
+/F-gs-font 10 10 SF
+59 546 M
+( ) s
+/Courier-Bold 10 10 SUF
+65 546 M
+(static) s
+/F-gs-font 10 10 SF
+101 546 M
+( Integer sum\(Collection in\) ) s
+/Courier-Bold 10 10 SUF
+269 546 M
+(throws) s
+/F-gs-font 10 10 SF
+305 546 M
+( java.lang.ClassNotFoundException,java.) s
+5 535 M
+(lang.NoSuchMethodException,IllegalAccessException, java.lang.reflect.InvocationTargetExce) s
+5 524 M
+(ption) s
+5 513 M
+(   {) s
+5 502 M
+(     Partial current;) s
+5 491 M
+(     ) s
+/Courier-Bold 10 10 SUF
+35 491 M
+(return) s
+/F-gs-font 10 10 SF
+71 491 M
+( \(Integer\) \(List.foldl\(in,) s
+/Courier-Bold 10 10 SUF
+227 491 M
+(new) s
+/F-gs-font 10 10 SF
+245 491 M
+( Integer\(0\),) s
+/Courier-Bold 10 10 SUF
+317 491 M
+(new) s
+/F-gs-font 10 10 SF
+335 491 M
+( Partial\() s
+/Courier-Bold 10 10 SUF
+389 491 M
+("add") s
+/F-gs-font 10 10 SF
+419 491 M
+(,) s
+/Courier-Bold 10 10 SUF
+425 491 M
+("List") s
+/F-gs-font 10 10 SF
+461 491 M
+(\)\)\);) s
+5 480 M
+(   }) s
+5 469 M
+(   ) s
+/Courier-Bold 10 10 SUF
+23 469 M
+(public) s
+/F-gs-font 10 10 SF
+59 469 M
+( ) s
+/Courier-Bold 10 10 SUF
+65 469 M
+(static) s
+/F-gs-font 10 10 SF
+101 469 M
+( Collection filter\(Collection in, Collection out,Partial f\) ) s
+/Courier-Bold 10 10 SUF
+461 469 M
+(throws) s
+/F-gs-font 10 10 SF
+497 469 M
+( java.l) s
+5 458 M
+(ang.ClassNotFoundException,java.lang.NoSuchMethodException,IllegalAccessException, java.l) s
+5 447 M
+(ang.reflect.InvocationTargetException) s
+5 436 M
+(   {) s
+5 425 M
+(     Partial current;) s
+5 414 M
+(     current=) s
+/Courier-Bold 10 10 SUF
+83 414 M
+(new) s
+/F-gs-font 10 10 SF
+101 414 M
+( Partial\() s
+/Courier-Bold 10 10 SUF
+155 414 M
+("filter_single") s
+/F-gs-font 10 10 SF
+245 414 M
+(,) s
+/Courier-Bold 10 10 SUF
+251 414 M
+("List") s
+/F-gs-font 10 10 SF
+287 414 M
+(\);) s
+5 403 M
+(     current=current.addArg\(f\);) s
+5 392 M
+(     ) s
+/Courier-Bold 10 10 SUF
+35 392 M
+(return) s
+/F-gs-font 10 10 SF
+71 392 M
+( \(Collection\) foldl\(in,out,current\);) s
+5 381 M
+(   }) s
+5 370 M
+(   ) s
+/Courier-Bold 10 10 SUF
+23 370 M
+(public) s
+/F-gs-font 10 10 SF
+59 370 M
+( ) s
+/Courier-Bold 10 10 SUF
+65 370 M
+(static) s
+/F-gs-font 10 10 SF
+101 370 M
+( Collection filter_single \(Partial f,Object thisone,Object out\) ) s
+/Courier-Bold 10 10 SUF
+485 370 M
+(throws) s
+/F-gs-font 10 10 SF
+521 370 M
+( ja) s
+5 359 M
+(va.lang.ClassNotFoundException,java.lang.NoSuchMethodException,IllegalAccessException, ja) s
+5 348 M
+(va.lang.reflect.InvocationTargetException) s
+5 337 M
+(   {) s
+5 326 M
+(     Partial current;) s
+5 315 M
+(     Object k;) s
+5 304 M
+(     Collection bar=\(Collection\) out;) s
+5 293 M
+(     k=f.addArgAndRun\(thisone\);) s
+5 282 M
+(     ) s
+/Courier-Bold 10 10 SUF
+35 282 M
+(if) s
+/F-gs-font 10 10 SF
+47 282 M
+( \(\(\(Boolean\) k\).booleanValue\(\)\) {bar.add\(thisone\);}) s
+5 271 M
+(     ) s
+/Courier-Bold 10 10 SUF
+35 271 M
+(return) s
+/F-gs-font 10 10 SF
+71 271 M
+( bar;) s
+5 260 M
+(   }) s
+5 249 M
+(   ) s
+/Courier-Bold 10 10 SUF
+23 249 M
+(public) s
+/F-gs-font 10 10 SF
+59 249 M
+( ) s
+/Courier-Bold 10 10 SUF
+65 249 M
+(static) s
+/F-gs-font 10 10 SF
+101 249 M
+( Collection map\(Collection in, Collection out,Partial f\) ) s
+/Courier-Bold 10 10 SUF
+443 249 M
+(throws) s
+/F-gs-font 10 10 SF
+479 249 M
+( java.lang) s
+5 238 M
+(.ClassNotFoundException,java.lang.NoSuchMethodException,IllegalAccessException, java.lang) s
+5 227 M
+(.reflect.InvocationTargetException) s
+5 216 M
+(   {) s
+5 205 M
+(     Partial current;) s
+5 194 M
+(     current=) s
+/Courier-Bold 10 10 SUF
+83 194 M
+(new) s
+/F-gs-font 10 10 SF
+101 194 M
+( Partial\() s
+/Courier-Bold 10 10 SUF
+155 194 M
+("map_single") s
+/F-gs-font 10 10 SF
+227 194 M
+(,) s
+/Courier-Bold 10 10 SUF
+233 194 M
+("List") s
+/F-gs-font 10 10 SF
+269 194 M
+(\);) s
+5 183 M
+(     current=current.addArg\(f\);) s
+5 172 M
+(     ) s
+/Courier-Bold 10 10 SUF
+35 172 M
+(return) s
+/F-gs-font 10 10 SF
+71 172 M
+( \(Collection\) foldl\(in,out,current\);) s
+5 161 M
+(   }) s
+5 150 M
+(   ) s
+/Courier-Bold 10 10 SUF
+23 150 M
+(public) s
+/F-gs-font 10 10 SF
+59 150 M
+( ) s
+/Courier-Bold 10 10 SUF
+65 150 M
+(static) s
+/F-gs-font 10 10 SF
+101 150 M
+( Collection map_single \(Partial f,Object thisone,Object out\) ) s
+/Courier-Bold 10 10 SUF
+467 150 M
+(throws) s
+/F-gs-font 10 10 SF
+503 150 M
+( java.) s
+5 139 M
+(lang.ClassNotFoundException,java.lang.NoSuchMethodException,IllegalAccessException, java.) s
+5 128 M
+(lang.reflect.InvocationTargetException) s
+5 117 M
+(   {) s
+5 106 M
+(     Partial current;) s
+5 95 M
+(     Object k;) s
+5 84 M
+(     Collection bar=\(Collection\) out;) s
+5 73 M
+(     bar.add\(f.addArgAndRun\(thisone\)\);) s
+5 62 M
+(     ) s
+/Courier-Bold 10 10 SUF
+35 62 M
+(return) s
+/F-gs-font 10 10 SF
+71 62 M
+( bar;) s
+5 51 M
+(   }) s
+5 40 M
+(   ) s
+/Courier-Bold 10 10 SUF
+23 40 M
+(public) s
+/F-gs-font 10 10 SF
+59 40 M
+( ) s
+/Courier-Bold 10 10 SUF
+65 40 M
+(static) s
+/F-gs-font 10 10 SF
+101 40 M
+( Object foldl \(Collection in, Object out, Partial f\) ) s
+/Courier-Bold 10 10 SUF
+419 40 M
+(throws) s
+/F-gs-font 10 10 SF
+455 40 M
+( java.lang.Cla) s
+5 29 M
+(ssNotFoundException,java.lang.NoSuchMethodException,IllegalAccessException, java.lang.ref) s
+5 18 M
+(lect.InvocationTargetException) s
+5 7 M
+(   {) s
+_R
+S
+%%Page: (2) 2
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 2 def
+/fname (List.java) def
+/fdir () def
+/ftail (List.java) def
+% User defined strings:
+/fmodstr (Tue Dec 04 17:21:01 2001) def
+/pagenumstr (2) def
+/user_header_p true def
+/user_header_left_str (Jen Freeman) def
+/user_header_center_str (List.java) def
+/user_header_right_str (2 of 2) def
+%%EndPageSetup
+do_header
+5 766 M
+(     Iterator g;) s
+5 755 M
+(     g=in.iterator\(\);) s
+5 744 M
+(     ) s
+/Courier-Bold 10 10 SUF
+35 744 M
+(while) s
+/F-gs-font 10 10 SF
+65 744 M
+( \(g.hasNext\(\)\)) s
+5 733 M
+(     {) s
+5 722 M
+(        Object i;) s
+5 711 M
+(        i=g.next\(\);) s
+5 700 M
+(        out=\(f.addArg\(i\)\).addArgAndRun\(out\);) s
+5 689 M
+(     }) s
+5 678 M
+(     ) s
+/Courier-Bold 10 10 SUF
+35 678 M
+(return) s
+/F-gs-font 10 10 SF
+71 678 M
+( out;) s
+5 667 M
+(   }) s
+5 656 M
+(}) s
+_R
+S
+%%Trailer
+%%Pages: 2
+%%DocumentNeededResources: font Courier-Bold Courier 
+%%EOF

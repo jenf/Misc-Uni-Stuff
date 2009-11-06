@@ -1,0 +1,1365 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 24 24 571 818
+%%Title: Enscript Output
+%%For: Jennifer Freeman
+%%Creator: GNU enscript 1.6.1
+%%CreationDate: Thu Feb  7 12:31:56 2002
+%%Orientation: Portrait
+%%Pages: (atend)
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: (atend)
+%%EndComments
+%%BeginProlog
+%%BeginResource: procset Enscript-Prolog 1.6 1
+%
+% Procedures.
+%
+
+/_S {	% save current state
+  /_s save def
+} def
+/_R {	% restore from saved state
+  _s restore
+} def
+
+/S {	% showpage protecting gstate
+  gsave
+  showpage
+  grestore
+} bind def
+
+/MF {	% fontname newfontname -> -	make a new encoded font
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  % insert only valid encoding vectors
+  encoding_vector length 256 eq {
+    newfont /Encoding encoding_vector put
+  } if
+
+  newfontname newfont definefont pop
+} def
+
+/SF { % fontname width height -> -	set a new font
+  /height exch def
+  /width exch def
+
+  findfont
+  [width 0 0 height 0 0] makefont setfont
+} def
+
+/SUF { % fontname width height -> -	set a new user font
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF
+  /F-gs-user-font width height SF
+} def
+
+/M {moveto} bind def
+/s {show} bind def
+
+/Box {	% x y w h -> -			define box path
+  /d_h exch def /d_w exch def /d_y exch def /d_x exch def
+  d_x d_y  moveto
+  d_w 0 rlineto
+  0 d_h rlineto
+  d_w neg 0 rlineto
+  closepath
+} def
+
+/bgs {	% x y height blskip gray str -> -	show string with bg color
+  /str exch def
+  /gray exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    gray setgray
+    fill
+  grestore
+  x y M str s
+} def
+
+% Highlight bars.
+/highlight_bars {	% nlines lineheight output_y_margin gray -> -
+  gsave
+    setgray
+    /ymarg exch def
+    /lineheight exch def
+    /nlines exch def
+
+    % This 2 is just a magic number to sync highlight lines to text.
+    0 d_header_y ymarg sub 2 sub translate
+
+    /cw d_output_w cols div def
+    /nrows d_output_h ymarg 2 mul sub lineheight div cvi def
+
+    % for each column
+    0 1 cols 1 sub {
+      cw mul /xp exch def
+
+      % for each rows
+      0 1 nrows 1 sub {
+        /rn exch def
+        rn lineheight mul neg /yp exch def
+        rn nlines idiv 2 mod 0 eq {
+	  % Draw highlight bar.  4 is just a magic indentation.
+	  xp 4 add yp cw 8 sub lineheight neg Box fill
+	} if
+      } for
+    } for
+
+  grestore
+} def
+
+% Line highlight bar.
+/line_highlight {	% x y width height gray -> -
+  gsave
+    /gray exch def
+    Box gray setgray fill
+  grestore
+} def
+
+% Column separator lines.
+/column_lines {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h translate
+    /cw d_output_w cols div def
+    1 1 cols 1 sub {
+      cw mul 0 moveto
+      0 d_output_h rlineto stroke
+    } for
+  grestore
+} def
+
+% Column borders.
+/column_borders {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h moveto
+    0 d_output_h rlineto
+    d_output_w 0 rlineto
+    0 d_output_h neg rlineto
+    closepath stroke
+  grestore
+} def
+
+% Do the actual underlay drawing
+/draw_underlay {
+  ul_style 0 eq {
+    ul_str true charpath stroke
+  } {
+    ul_str show
+  } ifelse
+} def
+
+% Underlay
+/underlay {	% - -> -
+  gsave
+    0 d_page_h translate
+    d_page_h neg d_page_w atan rotate
+
+    ul_gray setgray
+    ul_font setfont
+    /dw d_page_h dup mul d_page_w dup mul add sqrt def
+    ul_str stringwidth pop dw exch sub 2 div ul_h_ptsize -2 div moveto
+    draw_underlay
+  grestore
+} def
+
+/user_underlay {	% - -> -
+  gsave
+    ul_x ul_y translate
+    ul_angle rotate
+    ul_gray setgray
+    ul_font setfont
+    0 0 ul_h_ptsize 2 div sub moveto
+    draw_underlay
+  grestore
+} def
+
+% Page prefeed
+/page_prefeed {		% bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} def
+
+% Wrapped line markers
+/wrapped_line_mark {	% x y charwith charheight type -> -
+  /type exch def
+  /h exch def
+  /w exch def
+  /y exch def
+  /x exch def
+
+  type 2 eq {
+    % Black boxes (like TeX does)
+    gsave
+      0 setlinewidth
+      x w 4 div add y M
+      0 h rlineto w 2 div 0 rlineto 0 h neg rlineto
+      closepath fill
+    grestore
+  } {
+    type 3 eq {
+      % Small arrows
+      gsave
+        .2 setlinewidth
+        x w 2 div add y h 2 div add M
+        w 4 div 0 rlineto
+        x w 4 div add y lineto stroke
+
+        x w 4 div add w 8 div add y h 4 div add M
+        x w 4 div add y lineto
+	w 4 div h 8 div rlineto stroke
+      grestore
+    } {
+      % do nothing
+    } ifelse
+  } ifelse
+} def
+
+% EPSF import.
+
+/BeginEPSF {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack
+  userdict begin
+  /showpage { } def
+  0 setgray 0 setlinecap
+  1 setlinewidth 0 setlinejoin
+  10 setmiterlimit [ ] 0 setdash newpath
+  /languagelevel where {
+    pop languagelevel
+    1 ne {
+      false setstrokeadjust false setoverprint
+    } if
+  } if
+} bind def
+
+/EndEPSF {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+%%EndResource
+%%BeginResource: procset Enscript-Encoding-88591 1.6 1
+/encoding_vector [
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclam       	/quotedbl     	/numbersign   	
+/dollar       	/percent      	/ampersand    	/quoteright   	
+/parenleft    	/parenright   	/asterisk     	/plus         	
+/comma        	/hyphen       	/period       	/slash        	
+/zero         	/one          	/two          	/three        	
+/four         	/five         	/six          	/seven        	
+/eight        	/nine         	/colon        	/semicolon    	
+/less         	/equal        	/greater      	/question     	
+/at           	/A            	/B            	/C            	
+/D            	/E            	/F            	/G            	
+/H            	/I            	/J            	/K            	
+/L            	/M            	/N            	/O            	
+/P            	/Q            	/R            	/S            	
+/T            	/U            	/V            	/W            	
+/X            	/Y            	/Z            	/bracketleft  	
+/backslash    	/bracketright 	/asciicircum  	/underscore   	
+/quoteleft    	/a            	/b            	/c            	
+/d            	/e            	/f            	/g            	
+/h            	/i            	/j            	/k            	
+/l            	/m            	/n            	/o            	
+/p            	/q            	/r            	/s            	
+/t            	/u            	/v            	/w            	
+/x            	/y            	/z            	/braceleft    	
+/bar          	/braceright   	/tilde        	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclamdown   	/cent         	/sterling     	
+/currency     	/yen          	/brokenbar    	/section      	
+/dieresis     	/copyright    	/ordfeminine  	/guillemotleft	
+/logicalnot   	/hyphen       	/registered   	/macron       	
+/degree       	/plusminus    	/twosuperior  	/threesuperior	
+/acute        	/mu           	/paragraph    	/bullet       	
+/cedilla      	/onesuperior  	/ordmasculine 	/guillemotright	
+/onequarter   	/onehalf      	/threequarters	/questiondown 	
+/Agrave       	/Aacute       	/Acircumflex  	/Atilde       	
+/Adieresis    	/Aring        	/AE           	/Ccedilla     	
+/Egrave       	/Eacute       	/Ecircumflex  	/Edieresis    	
+/Igrave       	/Iacute       	/Icircumflex  	/Idieresis    	
+/Eth          	/Ntilde       	/Ograve       	/Oacute       	
+/Ocircumflex  	/Otilde       	/Odieresis    	/multiply     	
+/Oslash       	/Ugrave       	/Uacute       	/Ucircumflex  	
+/Udieresis    	/Yacute       	/Thorn        	/germandbls   	
+/agrave       	/aacute       	/acircumflex  	/atilde       	
+/adieresis    	/aring        	/ae           	/ccedilla     	
+/egrave       	/eacute       	/ecircumflex  	/edieresis    	
+/igrave       	/iacute       	/icircumflex  	/idieresis    	
+/eth          	/ntilde       	/ograve       	/oacute       	
+/ocircumflex  	/otilde       	/odieresis    	/divide       	
+/oslash       	/ugrave       	/uacute       	/ucircumflex  	
+/udieresis    	/yacute       	/thorn        	/ydieresis    	
+] def
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Courier
+/HFpt_w 10 def
+/HFpt_h 10 def
+/Courier-Bold /HF-gs-font MF
+/HF /HF-gs-font findfont [HFpt_w 0 0 HFpt_h 0 0] makefont def
+/Courier /F-gs-font MF
+/F-gs-font 10 10 SF
+/#copies 1 def
+% Pagedevice definitions:
+gs_languagelevel 1 gt {
+  <<
+    /PageSize [595 842] 
+  >> setpagedevice
+} if
+%%BeginResource: procset Enscript-Header-simple 1.6 1
+
+/do_header {	% print default simple header
+  gsave
+    d_header_x d_header_y HFpt_h 3 div add translate
+
+    HF setfont
+    user_header_p {
+      5 0 moveto user_header_left_str show
+
+      d_header_w user_header_center_str stringwidth pop sub 2 div
+      0 moveto user_header_center_str show
+
+      d_header_w user_header_right_str stringwidth pop sub 5 sub
+      0 moveto user_header_right_str show
+    } {
+      5 0 moveto fname show
+      45 0 rmoveto fmodstr show
+      45 0 rmoveto pagenumstr show
+    } ifelse
+
+  grestore
+} def
+%%EndResource
+/d_page_w 547 def
+/d_page_h 794 def
+/d_header_x 0 def
+/d_header_y 779 def
+/d_header_w 547 def
+/d_header_h 15 def
+/d_footer_x 0 def
+/d_footer_y 0 def
+/d_footer_w 547 def
+/d_footer_h 0 def
+/d_output_w 547 def
+/d_output_h 779 def
+/cols 1 def
+%%EndSetup
+%%Page: (1) 1
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 1 def
+/fname (Partial.java) def
+/fdir () def
+/ftail (Partial.java) def
+% User defined strings:
+/fmodstr (Tue Dec 04 17:17:58 2001) def
+/pagenumstr (1) def
+/user_header_p true def
+/user_header_left_str (Jen Freeman) def
+/user_header_center_str (Partial.java) def
+/user_header_right_str (1 of 3) def
+%%EndPageSetup
+do_header
+/Courier-Bold 10 10 SUF
+5 766 M
+(import) s
+/F-gs-font 10 10 SF
+41 766 M
+( java.lang.Class;) s
+/Courier-Bold 10 10 SUF
+5 755 M
+(import) s
+/F-gs-font 10 10 SF
+41 755 M
+( java.lang.reflect.Method;) s
+/Courier-Bold 10 10 SUF
+5 744 M
+(import) s
+/F-gs-font 10 10 SF
+41 744 M
+( java.lang.reflect.Modifier;) s
+/Courier-Bold 10 10 SUF
+5 733 M
+(import) s
+/F-gs-font 10 10 SF
+41 733 M
+( java.lang.IllegalAccessException; ) s
+/Courier-Bold 10 10 SUF
+5 722 M
+(import) s
+/F-gs-font 10 10 SF
+41 722 M
+( java.lang.reflect.InvocationTargetException;) s
+/Courier-Bold 10 10 SUF
+5 711 M
+(import) s
+/F-gs-font 10 10 SF
+41 711 M
+( java.lang.reflect.Field;) s
+/Courier-Bold 10 10 SUF
+5 700 M
+(public) s
+/F-gs-font 10 10 SF
+41 700 M
+( ) s
+/Courier-Bold 10 10 SUF
+47 700 M
+(class) s
+/F-gs-font 10 10 SF
+77 700 M
+( Partial) s
+5 689 M
+({       ) s
+5 678 M
+(       String method;) s
+5 667 M
+(       Class class_to_run;) s
+5 656 M
+(       Object lastarg;) s
+5 645 M
+(       Object[] args;) s
+5 634 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 634 M
+(public) s
+/F-gs-font 10 10 SF
+83 634 M
+( Partial\(String meth\)) s
+5 623 M
+(       { ) s
+5 612 M
+(         method=meth;) s
+5 601 M
+(         lastarg=) s
+/Courier-Bold 10 10 SUF
+107 601 M
+(null) s
+/F-gs-font 10 10 SF
+131 601 M
+(;) s
+5 590 M
+(         class_to_run=) s
+/Courier-Bold 10 10 SUF
+137 590 M
+(null) s
+/F-gs-font 10 10 SF
+161 590 M
+(;) s
+5 579 M
+(         args=) s
+/Courier-Bold 10 10 SUF
+89 579 M
+(new) s
+/F-gs-font 10 10 SF
+107 579 M
+( Object[0];) s
+5 568 M
+(       }) s
+5 557 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 557 M
+(public) s
+/F-gs-font 10 10 SF
+83 557 M
+( Partial\(String meth,String class_to\) ) s
+/Courier-Bold 10 10 SUF
+311 557 M
+(throws) s
+/F-gs-font 10 10 SF
+347 557 M
+( ClassNotFoundException) s
+5 546 M
+(       { ) s
+5 535 M
+(         method=meth;) s
+5 524 M
+(         lastarg=) s
+/Courier-Bold 10 10 SUF
+107 524 M
+(null) s
+/F-gs-font 10 10 SF
+131 524 M
+(;) s
+5 513 M
+(         class_to_run=Class.forName\(class_to\);) s
+5 502 M
+(         args=) s
+/Courier-Bold 10 10 SUF
+89 502 M
+(new) s
+/F-gs-font 10 10 SF
+107 502 M
+( Object[0];) s
+5 491 M
+(       }) s
+5 480 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 480 M
+(private) s
+/F-gs-font 10 10 SF
+89 480 M
+( Partial\(Object foo, String meth,Object[] arg,Class class_to\)) s
+5 469 M
+(       {) s
+5 458 M
+(         method=meth;) s
+5 447 M
+(         args=arg;) s
+5 436 M
+(         lastarg=foo;) s
+5 425 M
+(         class_to_run=class_to;) s
+5 414 M
+(       }) s
+5 403 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 403 M
+(public) s
+/F-gs-font 10 10 SF
+83 403 M
+( Partial addArg\() s
+/Courier-Bold 10 10 SUF
+179 403 M
+(int) s
+/F-gs-font 10 10 SF
+197 403 M
+( arg\)) s
+5 392 M
+(       { ) s
+/Courier-Bold 10 10 SUF
+59 392 M
+(return) s
+/F-gs-font 10 10 SF
+95 392 M
+( addArg\() s
+/Courier-Bold 10 10 SUF
+143 392 M
+(new) s
+/F-gs-font 10 10 SF
+161 392 M
+( Integer\(arg\)\);}) s
+5 381 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 381 M
+(public) s
+/F-gs-font 10 10 SF
+83 381 M
+( Partial addArg\() s
+/Courier-Bold 10 10 SUF
+179 381 M
+(float) s
+/F-gs-font 10 10 SF
+209 381 M
+( arg\)) s
+5 370 M
+(       { ) s
+/Courier-Bold 10 10 SUF
+59 370 M
+(return) s
+/F-gs-font 10 10 SF
+95 370 M
+( addArg\() s
+/Courier-Bold 10 10 SUF
+143 370 M
+(new) s
+/F-gs-font 10 10 SF
+161 370 M
+( Float\(arg\)\);}) s
+5 359 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 359 M
+(public) s
+/F-gs-font 10 10 SF
+83 359 M
+( Partial addArg\() s
+/Courier-Bold 10 10 SUF
+179 359 M
+(double) s
+/F-gs-font 10 10 SF
+215 359 M
+( arg\)) s
+5 348 M
+(       { ) s
+/Courier-Bold 10 10 SUF
+59 348 M
+(return) s
+/F-gs-font 10 10 SF
+95 348 M
+( addArg\() s
+/Courier-Bold 10 10 SUF
+143 348 M
+(new) s
+/F-gs-font 10 10 SF
+161 348 M
+( Double\(arg\)\);}) s
+5 337 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 337 M
+(public) s
+/F-gs-font 10 10 SF
+83 337 M
+( Partial addArg\() s
+/Courier-Bold 10 10 SUF
+179 337 M
+(boolean) s
+/F-gs-font 10 10 SF
+221 337 M
+( arg\)) s
+5 326 M
+(       { ) s
+/Courier-Bold 10 10 SUF
+59 326 M
+(return) s
+/F-gs-font 10 10 SF
+95 326 M
+( addArg\() s
+/Courier-Bold 10 10 SUF
+143 326 M
+(new) s
+/F-gs-font 10 10 SF
+161 326 M
+( Boolean\(arg\)\);}) s
+5 315 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 315 M
+(public) s
+/F-gs-font 10 10 SF
+83 315 M
+( Partial addArg\(Object arg\)) s
+5 304 M
+(       {  ) s
+5 293 M
+(          Object[] foo=args;) s
+5 282 M
+(          ) s
+/Courier-Bold 10 10 SUF
+65 282 M
+(if) s
+/F-gs-font 10 10 SF
+77 282 M
+( \(lastarg!=) s
+/Courier-Bold 10 10 SUF
+143 282 M
+(null) s
+/F-gs-font 10 10 SF
+167 282 M
+(\)) s
+5 271 M
+(          {) s
+5 260 M
+(            foo=) s
+/Courier-Bold 10 10 SUF
+101 260 M
+(new) s
+/F-gs-font 10 10 SF
+119 260 M
+( Object[args.length+1];) s
+5 249 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 249 M
+(for) s
+/F-gs-font 10 10 SF
+95 249 M
+( \() s
+/Courier-Bold 10 10 SUF
+107 249 M
+(int) s
+/F-gs-font 10 10 SF
+125 249 M
+( i=0;i<args.length;i++\)) s
+5 238 M
+(            {) s
+5 227 M
+(              foo[i]=args[i];) s
+5 216 M
+(            }) s
+5 205 M
+(            foo[args.length]=lastarg;) s
+5 194 M
+(          }) s
+5 183 M
+(          ) s
+/Courier-Bold 10 10 SUF
+65 183 M
+(return) s
+/F-gs-font 10 10 SF
+101 183 M
+( ) s
+/Courier-Bold 10 10 SUF
+107 183 M
+(new) s
+/F-gs-font 10 10 SF
+125 183 M
+( Partial\(arg,method,foo,class_to_run\);) s
+5 172 M
+(       }) s
+5 161 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 161 M
+(public) s
+/F-gs-font 10 10 SF
+83 161 M
+( Object addArgAndRun\(Object arg\) ) s
+/Courier-Bold 10 10 SUF
+281 161 M
+(throws) s
+/F-gs-font 10 10 SF
+317 161 M
+( ClassNotFoundException, NoSuchMethod) s
+5 150 M
+(Exception, IllegalAccessException, InvocationTargetException) s
+5 139 M
+(       {  ) s
+5 128 M
+(         ) s
+/Courier-Bold 10 10 SUF
+59 128 M
+(return) s
+/F-gs-font 10 10 SF
+95 128 M
+( ) s
+/Courier-Bold 10 10 SUF
+101 128 M
+(this) s
+/F-gs-font 10 10 SF
+125 128 M
+(.addArg\(arg\).Run\(\);) s
+5 117 M
+(       }) s
+5 106 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 106 M
+(public) s
+/F-gs-font 10 10 SF
+83 106 M
+( Object[] addLast\(\)) s
+5 95 M
+(       {  ) s
+5 84 M
+(          Object[] foo=args;) s
+5 73 M
+(          ) s
+/Courier-Bold 10 10 SUF
+65 73 M
+(if) s
+/F-gs-font 10 10 SF
+77 73 M
+( \(lastarg!=) s
+/Courier-Bold 10 10 SUF
+143 73 M
+(null) s
+/F-gs-font 10 10 SF
+167 73 M
+(\)) s
+5 62 M
+(          {) s
+5 51 M
+(            foo=) s
+/Courier-Bold 10 10 SUF
+101 51 M
+(new) s
+/F-gs-font 10 10 SF
+119 51 M
+( Object[args.length+1];) s
+5 40 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 40 M
+(for) s
+/F-gs-font 10 10 SF
+95 40 M
+( \() s
+/Courier-Bold 10 10 SUF
+107 40 M
+(int) s
+/F-gs-font 10 10 SF
+125 40 M
+( i=0;i<args.length;i++\)) s
+5 29 M
+(            {) s
+5 18 M
+(              foo[i]=args[i];) s
+5 7 M
+(            }) s
+_R
+S
+%%Page: (2) 2
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 2 def
+/fname (Partial.java) def
+/fdir () def
+/ftail (Partial.java) def
+% User defined strings:
+/fmodstr (Tue Dec 04 17:17:58 2001) def
+/pagenumstr (2) def
+/user_header_p true def
+/user_header_left_str (Jen Freeman) def
+/user_header_center_str (Partial.java) def
+/user_header_right_str (2 of 3) def
+%%EndPageSetup
+do_header
+5 766 M
+(            foo[args.length]=lastarg;) s
+5 755 M
+(          }) s
+5 744 M
+(          ) s
+/Courier-Bold 10 10 SUF
+65 744 M
+(return) s
+/F-gs-font 10 10 SF
+101 744 M
+( foo;) s
+5 733 M
+(       }) s
+5 722 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 722 M
+(public) s
+/F-gs-font 10 10 SF
+83 722 M
+( Object Run\(\) ) s
+/Courier-Bold 10 10 SUF
+167 722 M
+(throws) s
+/F-gs-font 10 10 SF
+203 722 M
+( ClassNotFoundException, NoSuchMethodException, IllegalA) s
+5 711 M
+(ccessException, InvocationTargetException) s
+5 700 M
+(       {) s
+5 689 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 689 M
+(if) s
+/F-gs-font 10 10 SF
+89 689 M
+( \(class_to_run==) s
+/Courier-Bold 10 10 SUF
+185 689 M
+(null) s
+/F-gs-font 10 10 SF
+209 689 M
+(\) ) s
+/Courier-Bold 10 10 SUF
+221 689 M
+(return) s
+/F-gs-font 10 10 SF
+257 689 M
+( ) s
+/Courier-Bold 10 10 SUF
+263 689 M
+(this) s
+/F-gs-font 10 10 SF
+287 689 M
+(.RunClass\(\);) s
+5 678 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 678 M
+(return) s
+/F-gs-font 10 10 SF
+113 678 M
+( ) s
+/Courier-Bold 10 10 SUF
+119 678 M
+(this) s
+/F-gs-font 10 10 SF
+143 678 M
+(.RunAsStatic\(\);) s
+5 667 M
+(       }) s
+5 656 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 656 M
+(public) s
+/F-gs-font 10 10 SF
+83 656 M
+( Object RunClass\(\) ) s
+/Courier-Bold 10 10 SUF
+197 656 M
+(throws) s
+/F-gs-font 10 10 SF
+233 656 M
+( NoSuchMethodException, IllegalAccessException, Inv) s
+5 645 M
+(ocationTargetException) s
+5 634 M
+(       {     ) s
+5 623 M
+(            Class foo;) s
+5 612 M
+(            Method bar;) s
+5 601 M
+(            foo=lastarg.getClass\(\);) s
+5 590 M
+(            bar=) s
+/Courier-Bold 10 10 SUF
+101 590 M
+(this) s
+/F-gs-font 10 10 SF
+125 590 M
+(.find_Method\(foo\);) s
+5 579 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 579 M
+(return) s
+/F-gs-font 10 10 SF
+113 579 M
+( bar.invoke\(lastarg,args\);) s
+5 568 M
+(       }) s
+5 557 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 557 M
+(public) s
+/F-gs-font 10 10 SF
+83 557 M
+( Object RunAsStatic\(\) ) s
+/Courier-Bold 10 10 SUF
+215 557 M
+(throws) s
+/F-gs-font 10 10 SF
+251 557 M
+( NoSuchMethodException, IllegalAccessException, ) s
+5 546 M
+(InvocationTargetException) s
+5 535 M
+(       {     ) s
+5 524 M
+(            Method bar;) s
+5 513 M
+(            Object[] args_new=addLast\(\);) s
+5 502 M
+(            bar=) s
+/Courier-Bold 10 10 SUF
+101 502 M
+(this) s
+/F-gs-font 10 10 SF
+125 502 M
+(.find_Method_Static\(class_to_run,args_new\);) s
+5 491 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 491 M
+(if) s
+/F-gs-font 10 10 SF
+89 491 M
+( \(bar==) s
+/Courier-Bold 10 10 SUF
+131 491 M
+(null) s
+/F-gs-font 10 10 SF
+155 491 M
+(\) ) s
+/Courier-Bold 10 10 SUF
+167 491 M
+(throw) s
+/F-gs-font 10 10 SF
+197 491 M
+( ) s
+/Courier-Bold 10 10 SUF
+203 491 M
+(new) s
+/F-gs-font 10 10 SF
+221 491 M
+( NoSuchMethodException\(\);) s
+5 480 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 480 M
+(return) s
+/F-gs-font 10 10 SF
+113 480 M
+( bar.invoke\() s
+/Courier-Bold 10 10 SUF
+185 480 M
+(null) s
+/F-gs-font 10 10 SF
+209 480 M
+(,args_new\);) s
+5 469 M
+(       }) s
+5 458 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 458 M
+(public) s
+/F-gs-font 10 10 SF
+83 458 M
+( Method find_Method\(Class foo\)) s
+5 447 M
+(       {) s
+5 436 M
+(         Method[] bar;) s
+5 425 M
+(         bar=foo.getMethods\(\);) s
+5 414 M
+(         ) s
+/Courier-Bold 10 10 SUF
+59 414 M
+(for) s
+/F-gs-font 10 10 SF
+77 414 M
+( \() s
+/Courier-Bold 10 10 SUF
+89 414 M
+(int) s
+/F-gs-font 10 10 SF
+107 414 M
+( i=0;i<bar.length;i++\)) s
+5 403 M
+(         {   ) s
+5 392 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 392 M
+(if) s
+/F-gs-font 10 10 SF
+89 392 M
+( \(method.equals\(bar[i].getName\(\)\)\)) s
+5 381 M
+(            {   ) s
+5 370 M
+(                ) s
+/Courier-Bold 10 10 SUF
+101 370 M
+(if) s
+/F-gs-font 10 10 SF
+113 370 M
+( \(check_Method\(bar[i].getParameterTypes\(\),args\)\) ) s
+/Courier-Bold 10 10 SUF
+407 370 M
+(return) s
+/F-gs-font 10 10 SF
+443 370 M
+( bar[i];) s
+5 359 M
+(            }) s
+5 348 M
+(         }) s
+5 337 M
+(         System.out.println\() s
+/Courier-Bold 10 10 SUF
+173 337 M
+("Cannot find method") s
+/F-gs-font 10 10 SF
+293 337 M
+(\);) s
+5 326 M
+(         ) s
+/Courier-Bold 10 10 SUF
+59 326 M
+(return) s
+/F-gs-font 10 10 SF
+95 326 M
+( ) s
+/Courier-Bold 10 10 SUF
+101 326 M
+(null) s
+/F-gs-font 10 10 SF
+125 326 M
+(;) s
+5 315 M
+(       }) s
+5 304 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 304 M
+(public) s
+/F-gs-font 10 10 SF
+83 304 M
+( Method find_Method_Static\(Class foo,Object[] args_\)) s
+5 293 M
+(       {) s
+5 282 M
+(         Method[] bar;) s
+5 271 M
+(         bar=foo.getMethods\(\);) s
+5 260 M
+(         ) s
+/Courier-Bold 10 10 SUF
+59 260 M
+(for) s
+/F-gs-font 10 10 SF
+77 260 M
+( \() s
+/Courier-Bold 10 10 SUF
+89 260 M
+(int) s
+/F-gs-font 10 10 SF
+107 260 M
+( i=0;i<bar.length;i++\)) s
+5 249 M
+(         {   ) s
+5 238 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 238 M
+(if) s
+/F-gs-font 10 10 SF
+89 238 M
+( \(method.equals\(bar[i].getName\(\)\)\)) s
+5 227 M
+(            {   ) s
+5 216 M
+(                ) s
+/Courier-Bold 10 10 SUF
+101 216 M
+(if) s
+/F-gs-font 10 10 SF
+113 216 M
+( \(Modifier.isStatic\(bar[i].getModifiers\(\)\)\)) s
+5 205 M
+(                {) s
+/Courier-Bold 10 10 SUF
+107 205 M
+(if) s
+/F-gs-font 10 10 SF
+119 205 M
+( \(check_Method\(bar[i].getParameterTypes\(\),args_\)\) ) s
+/Courier-Bold 10 10 SUF
+419 205 M
+(return) s
+/F-gs-font 10 10 SF
+455 205 M
+( bar[i];}) s
+5 194 M
+(            }) s
+5 183 M
+(         }) s
+5 172 M
+(         System.out.println\() s
+/Courier-Bold 10 10 SUF
+173 172 M
+("Cannot find method ") s
+/F-gs-font 10 10 SF
+299 172 M
+(+method +) s
+/Courier-Bold 10 10 SUF
+353 172 M
+(" in ") s
+/F-gs-font 10 10 SF
+389 172 M
+( + foo\);) s
+5 161 M
+(         ) s
+/Courier-Bold 10 10 SUF
+59 161 M
+(return) s
+/F-gs-font 10 10 SF
+95 161 M
+( ) s
+/Courier-Bold 10 10 SUF
+101 161 M
+(null) s
+/F-gs-font 10 10 SF
+125 161 M
+(;) s
+5 150 M
+(       }) s
+5 139 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 139 M
+(public) s
+/F-gs-font 10 10 SF
+83 139 M
+( ) s
+/Courier-Bold 10 10 SUF
+89 139 M
+(boolean) s
+/F-gs-font 10 10 SF
+131 139 M
+( check_Method\(Class[] todo,Object[] args_\)) s
+5 128 M
+(       {) s
+5 117 M
+(          ) s
+/Courier-Bold 10 10 SUF
+65 117 M
+(if) s
+/F-gs-font 10 10 SF
+77 117 M
+( \(todo.length!=args_.length\) ) s
+/Courier-Bold 10 10 SUF
+251 117 M
+(return) s
+/F-gs-font 10 10 SF
+287 117 M
+( ) s
+/Courier-Bold 10 10 SUF
+293 117 M
+(false) s
+/F-gs-font 10 10 SF
+323 117 M
+(;) s
+5 106 M
+(          ) s
+/Courier-Bold 10 10 SUF
+65 106 M
+(for) s
+/F-gs-font 10 10 SF
+83 106 M
+( \() s
+/Courier-Bold 10 10 SUF
+95 106 M
+(int) s
+/F-gs-font 10 10 SF
+113 106 M
+( i=0;i<todo.length;i++\)) s
+5 95 M
+(          {) s
+5 84 M
+(               check_type\(todo[i],args_[i]\);) s
+5 73 M
+(          }) s
+5 62 M
+(          ) s
+/Courier-Bold 10 10 SUF
+65 62 M
+(return) s
+/F-gs-font 10 10 SF
+101 62 M
+( ) s
+/Courier-Bold 10 10 SUF
+107 62 M
+(true) s
+/F-gs-font 10 10 SF
+131 62 M
+(;) s
+5 51 M
+(       }) s
+5 40 M
+(       ) s
+/Courier-Bold 10 10 SUF
+47 40 M
+(public) s
+/F-gs-font 10 10 SF
+83 40 M
+( ) s
+/Courier-Bold 10 10 SUF
+89 40 M
+(static) s
+/F-gs-font 10 10 SF
+125 40 M
+( ) s
+/Courier-Bold 10 10 SUF
+131 40 M
+(boolean) s
+/F-gs-font 10 10 SF
+173 40 M
+( check_type\(Class todo,Object args\)) s
+5 29 M
+(       {  ) s
+5 18 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 18 M
+(return) s
+/F-gs-font 10 10 SF
+89 18 M
+( \(todo.isInstance\(args\)\);) s
+5 7 M
+(       }) s
+_R
+S
+%%Page: (3) 3
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 3 def
+/fname (Partial.java) def
+/fdir () def
+/ftail (Partial.java) def
+% User defined strings:
+/fmodstr (Tue Dec 04 17:17:58 2001) def
+/pagenumstr (3) def
+/user_header_p true def
+/user_header_left_str (Jen Freeman) def
+/user_header_center_str (Partial.java) def
+/user_header_right_str (3 of 3) def
+%%EndPageSetup
+do_header
+5 766 M
+(}) s
+_R
+S
+%%Trailer
+%%Pages: 3
+%%DocumentNeededResources: font Courier-Bold Courier 
+%%EOF
