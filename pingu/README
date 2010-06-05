@@ -1,3 +1,9 @@
+Pingu - A Peer to Peer networking client with GUI
+
+This was my first attempt at multithreaded programs in C.
+I made some drastic mistakes, but learnt from it.
+The md5sum check per file at initalisation was a bit silly.
+
 To Build
 
 Requirements
