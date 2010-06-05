@@ -1,1 +1,559 @@
-/sh-home/se00jf/diplomacy.xml
+<?xml version="1.0"?>
+<map>
+ <province name="Munich" country="Germany" short="Mun" supply="yes" type="land">
+  <neighbour>Trl</neighbour>
+  <neighbour>Boh</neighbour>
+  <neighbour>Sil</neighbour>
+  <neighbour>Bur</neighbour>
+  <neighbour>Ruh</neighbour>
+  <neighbour>Kie</neighbour>
+  <neighbour>Ber</neighbour>
+ </province>
+ <province name="Venice" country="Italy" short="ven" type="coast">
+  <neighbour>Adr</neighbour>
+  <neighbour>Apu</neighbour>
+  <neighbour>Pie</neighbour>
+  <neighbour>Tus</neighbour>
+  <neighbour>Rom</neighbour>
+  <neighbour>Tri</neighbour>
+  <neighbour>Trl</neighbour>
+ </province>
+ <province name="Tyrolia" country="Austria" short="trl" type="land">
+  <neighbour>Mun</neighbour>
+  <neighbour>Boh</neighbour>
+  <neighbour>Vie</neighbour>
+  <neighbour>Tri</neighbour>
+  <neighbour>Ven</neighbour>
+  <neighbour>Pie</neighbour>
+ </province>
+ <province name="Bohemia" country="Austria" short="Boh" type="land">
+  <neighbour>Mun</neighbour>
+  <neighbour>Sil</neighbour>
+  <neighbour>Gal</neighbour>
+  <neighbour>Vie</neighbour>
+  <neighbour>Trl</neighbour>
+ </province>
+ <province name="Vienna" country="Austria" short="Vie" supply="yes" type="land">
+  <neighbour>Bud</neighbour>
+  <neighbour>Gal</neighbour>
+  <neighbour>Boh</neighbour>
+  <neighbour>Tri</neighbour>
+  <neighbour>Trl</neighbour>
+ </province>
+ <province name="Budapest" country="Austria" short="Bud" supply="yes" type="land">
+  <neighbour>Vie</neighbour>
+  <neighbour>Gal</neighbour>
+  <neighbour>Rum</neighbour>
+  <neighbour>Ser</neighbour>
+  <neighbour>Tri</neighbour>
+ </province>
+ <province name="Trieste" country="Austria" short="tri" supply="yes" type="coast">
+  <neighbour>Vie</neighbour>
+  <neighbour>Ven</neighbour>
+  <neighbour>Trl</neighbour>
+  <neighbour>Bud</neighbour>
+  <neighbour>Adr</neighbour>
+  <neighbour>Ser</neighbour>
+  <neighbour>Alb</neighbour>
+ </province>
+ <province name="Serbia" short="ser" supply="yes" type="land">
+  <neighbour>Tri</neighbour>
+  <neighbour>Alb</neighbour>
+  <neighbour>Bud</neighbour>
+  <neighbour>Rum</neighbour>
+  <neighbour>Bul</neighbour>
+  <neighbour>Gre</neighbour>
+ </province>
+ <province name="Albania" short="alb" type="coast">
+  <neighbour>Adr</neighbour>
+  <neighbour>Ion</neighbour>
+  <neighbour>Tri</neighbour>
+  <neighbour>Ser</neighbour>
+  <neighbour>Gre</neighbour>
+ </province>
+ <province name="Piedmont" country="italy" short="pie" type="coast">
+  <neighbour>Mar</neighbour>
+  <neighbour>Lyo</neighbour>
+  <neighbour>Tus</neighbour>
+  <neighbour>Ven</neighbour>
+ </province>
+ <province name="Tuscany" country="italy" short="tus" type="coast"> 
+  <neighbour>Pie</neighbour>
+  <neighbour>Rom</neighbour>
+  <neighbour>Ven</neighbour>
+  <neighbour>Lyo</neighbour>
+  <neighbour>Tyn</neighbour>
+ </province>
+ <province name="Rome" country="italy" short="Rom" supply="yes" type="coast">
+  <neighbour>Tus</neighbour>
+  <neighbour>Ven</neighbour>
+  <neighbour>Tyn</neighbour>
+  <neighbour>Apu</neighbour>
+  <neighbour>Nap</neighbour>
+ </province>
+ <province name="Apulia" country="italy" short="Apu" type="coast">
+  <neighbour>Ven</neighbour>
+  <neighbour>Rom</neighbour>
+  <neighbour>Adr</neighbour>
+  <neighbour>Ion</neighbour>
+  <neighbour>Nap</neighbour>
+ </province>
+ <province name="Naples" country="italy" short="Nap" supply="yes" type="coast">
+  <neighbour>Apu</neighbour>
+  <neighbour>Rom</neighbour>
+  <neighbour>Ion</neighbour>
+  <neighbour>Tyn</neighbour>
+ </province>
+ <province name="Greece" short="Gre" supply="yes" type="coast">
+  <neighbour>Ion</neighbour>
+  <neighbour>Aeg</neighbour>
+  <neighbour>Alb</neighbour>
+  <neighbour>Ser</neighbour>
+  <neighbour>Bul</neighbour>
+ </province>
+ <province name="Galica" country="austria" short="Gal" type="land">
+  <neighbour>Ukr</neighbour>
+  <neighbour>War</neighbour>
+  <neighbour>Rum</neighbour>
+  <neighbour>Vie</neighbour>
+  <neighbour>Bud</neighbour>
+  <neighbour>Sil</neighbour>
+  <neighbour>Boh</neighbour>
+ </province>
+ <province name="Ukraine" country="russia" short="ukr" type="land">
+  <neighbour>Mos</neighbour>
+  <neighbour>War</neighbour>
+  <neighbour>Sev</neighbour>
+  <neighbour>Gal</neighbour>
+  <neighbour>Rum</neighbour>
+ </province>
+ <province name="Warsaw" country="russia" short="War" supply="yes" type="land">
+  <neighbour>Ukr</neighbour>
+  <neighbour>Mos</neighbour>
+  <neighbour>Lvn</neighbour>
+  <neighbour>Pru</neighbour>
+  <neighbour>Sil</neighbour>
+  <neighbour>Gal</neighbour>
+ </province>
+ <province name="Silesia" country="germany" short="Sil" type="land">
+  <neighbour>Pru</neighbour>
+  <neighbour>Ber</neighbour>
+  <neighbour>Mun</neighbour>
+  <neighbour>War</neighbour>
+  <neighbour>Boh</neighbour>
+  <neighbour>Gal</neighbour>
+ </province>
+ <province name="Moscow" country="russia" supply="yes" short="Mos" type="land">
+  <neighbour>Sev</neighbour>
+  <neighbour>Ukr</neighbour>
+  <neighbour>War</neighbour>
+  <neighbour>Lvn</neighbour>
+  <neighbour>Stp</neighbour>
+ </province>
+ <province name="Sevestapol" country="russia" supply="yes" short="Sev" type="coast">
+  <neighbour>Bla</neighbour>
+  <neighbour>Rum</neighbour>
+  <neighbour>Ukr</neighbour>
+  <neighbour>Mos</neighbour>
+  <neighbour>Arm</neighbour>
+ </province>
+ <province name="Armenia" country="turkey" short="Arm" type="coast">
+  <neighbour>Sev</neighbour>
+  <neighbour>Ank</neighbour>
+  <neighbour>Bla</neighbour>
+  <neighbour>Smy</neighbour>
+  <neighbour>Syr</neighbour>
+ </province>
+ <province name="Ankara" country="turkey" short="ank" supply="yes" type="coast">
+  <neighbour>Bla</neighbour>
+  <neighbour>Con</neighbour>
+  <neighbour>Arm</neighbour>
+  <neighbour>Smy</neighbour>
+ </province>
+ <province name="Syria" country="turkey" short="Syr" type="coast">
+  <neighbour>Smy</neighbour>
+  <neighbour>Arm</neighbour>
+  <neighbour>Eas</neighbour>
+ </province>
+ <province name="Marseilles" country="france" short="Mar" supply="yes" type="coast">
+  <neighbour>Gas</neighbour>
+  <neighbour>Lyo</neighbour>
+  <neighbour>Pie</neighbour>
+  <neighbour>Spa</neighbour>
+  <neighbour>Bur</neighbour>
+ </province>
+ <province name="Burgundy" country="france" short="bur" type="land">
+  <neighbour>Mar</neighbour>
+  <neighbour>Gas</neighbour>
+  <neighbour>Par</neighbour>
+  <neighbour>Pic</neighbour>
+  <neighbour>Mun</neighbour>
+  <neighbour>Ruh</neighbour>
+  <neighbour>Bel</neighbour>
+ </province>
+ <province name="Ruhr" country="germany" short="ruh" type="land">
+  <neighbour>Bur</neighbour>
+  <neighbour>Bel</neighbour>
+  <neighbour>Hol</neighbour>
+  <neighbour>Kie</neighbour>
+  <neighbour>Mun</neighbour>
+ </province>
+ <province name="Paris" country="france" short="par" supply="yes" type="land">
+  <neighbour>Pic</neighbour>
+  <neighbour>Bre</neighbour>
+  <neighbour>Gas</neighbour>
+  <neighbour>Bur</neighbour>
+ </province>
+ <province name="Picardy" country="france" short="pic" type="coast">
+  <neighbour>Bre</neighbour>
+  <neighbour>Eng</neighbour>
+  <neighbour>Bel</neighbour>
+  <neighbour>Par</neighbour>
+  <neighbour>Bur</neighbour>
+ </province>
+ <province name="Gascony" country="france" short="gas" type="coast">
+  <neighbour>bre</neighbour>
+  <neighbour>par</neighbour>
+  <neighbour>Bur</neighbour>
+  <neighbour>Mar</neighbour>
+  <neighbour to="A">Spa</neighbour>
+  <neighbour>Mid</neighbour>
+ </province>
+ <province name="Spain" coastA="North Coast" coastB="South Coast" short="spa" supply="yes" type="coast">
+  <neighbour from="B">Wes</neighbour>
+  <neighbour from="B">Lyo</neighbour>
+  <neighbour>Por</neighbour>
+  <neighbour>Mid</neighbour>
+  <neighbour from="A">Gas</neighbour>
+  <neighbour from="B">Mar</neighbour>
+ </province>
+ <province name="Portugal" short="por" type="coast" supply="yes">
+  <neighbour>Mid</neighbour>
+  <neighbour>Spa</neighbour>
+ </province>
+ <province name="Mid-atlantic ocean" short="mid" type="sea">
+  <neighbour>Por</neighbour>
+  <neighbour>Spa</neighbour>
+  <neighbour>Naf</neighbour>
+  <neighbour>Gas</neighbour>
+  <neighbour>Bre</neighbour>
+  <neighbour>Nat</neighbour>
+  <neighbour>Iri</neighbour>
+  <neighbour>Eng</neighbour>
+ </province>
+ <province name="Western Mediteranian" short="wes" type="sea">
+  <neighbour to="B">Spa</neighbour>
+  <neighbour>Lyo</neighbour>
+  <neighbour>Tyn</neighbour>
+  <neighbour>Naf</neighbour>
+  <neighbour>Tun</neighbour>
+ </province>
+ <province name="North Africa" short="naf" type="coast">
+  <neighbour>Wes</neighbour>
+  <neighbour>Tun</neighbour>
+  <neighbour>Mid</neighbour>
+ </province>
+ <province name="Gulf of Lyon" short="lyo" type="sea">
+  <neighbour>Mar</neighbour>
+  <neighbour to="B">Spa</neighbour>
+  <neighbour>Pie</neighbour>
+  <neighbour>Tus</neighbour>
+  <neighbour>Tyn</neighbour>
+  <neighbour>Wes</neighbour>
+ </province>
+ <province name="Belgium" short="bel" supply="yes" type="coast">
+  <neighbour>pic</neighbour>
+  <neighbour>hol</neighbour>
+  <neighbour>eng</neighbour>
+  <neighbour>nth</neighbour>
+  <neighbour>ruh</neighbour>
+  <neighbour>bur</neighbour>
+ </province>
+ <province name="Tunis" short="tun" supply="yes" type="coast">
+  <neighbour>Tyn</neighbour>
+  <neighbour>Naf</neighbour>
+  <neighbour>Wes</neighbour>
+  <neighbour>Ion</neighbour>
+ </province>
+ <province name="Holland" short="hol" supply="yes" type="coast">
+  <neighbour>Kie</neighbour>
+  <neighbour>Ruh</neighbour>
+  <neighbour>Bel</neighbour>
+  <neighbour>Nth</neighbour>
+  <neighbour>Hel</neighbour>
+ </province>
+ <province name="Brest" country="france" short="bre" supply="yes" type="coast">
+  <neighbour>Mid</neighbour>
+  <neighbour>Eng</neighbour>
+  <neighbour>Pic</neighbour>
+  <neighbour>Par</neighbour>
+  <neighbour>Gas</neighbour>
+ </province>
+ <province name="English Channel" country="seas" short="eng" type="sea">
+  <neighbour>Mid</neighbour>
+  <neighbour>Wal</neighbour>
+  <neighbour>Lon</neighbour>
+  <neighbour>Nth</neighbour>
+  <neighbour>Pic</neighbour>
+  <neighbour>Bre</neighbour>
+  <neighbour>Iri</neighbour>
+  <neighbour>Bel</neighbour>
+ </province>
+ <province name="Irish Sea" country="seas" short="iri" type="sea">
+  <neighbour>Wal</neighbour>
+  <neighbour>Mid</neighbour>
+  <neighbour>Eng</neighbour>
+  <neighbour>Lpl</neighbour>
+  <neighbour>Nat</neighbour>
+ </province>
+ <province name="Wales" country="britain" short="wal" type="coast">
+  <neighbour>Iri</neighbour>
+  <neighbour>Lpl</neighbour>
+  <neighbour>Yor</neighbour>
+  <neighbour>Lon</neighbour>
+  <neighbour>Eng</neighbour>
+ </province>
+ <province name="Liverpool" country="britain" short="lpl" type="coast">
+  <neighbour>Wal</neighbour>
+  <neighbour>Iri</neighbour>
+  <neighbour>Nat</neighbour>
+  <neighbour>Yor</neighbour>
+  <neighbour>Edi</neighbour>
+  <neighbour>Cly</neighbour>
+ </province>
+ <province name="Clyde" country="britain" short="cly" type="coast">
+  <neighbour>Nat</neighbour>
+  <neighbour>Lpl</neighbour>
+  <neighbour>Edi</neighbour>
+  <neighbour>Nrg</neighbour>
+ </province>
+ <province name="North Atlantic" country="seas" short="nat" type="sea">
+  <neighbour>Cly</neighbour>
+  <neighbour>Nrg</neighbour>
+  <neighbour>Mid</neighbour>
+  <neighbour>Lpl</neighbour>
+ </province>
+ <province name="Norweigian Sea" country="seas" short="nrg" type="sea">
+  <neighbour>Nat</neighbour>
+  <neighbour>Nth</neighbour>
+  <neighbour>Nwy</neighbour>
+  <neighbour>Edi</neighbour>
+ </province>
+ <province name="Edinburgh" country="britain" short="edi" type="coast">
+  <neighbour>Nrg</neighbour>
+  <neighbour>Cly</neighbour>
+  <neighbour>Lpl</neighbour>
+  <neighbour>Nth</neighbour>
+  <neighbour>Yor</neighbour>
+ </province>
+ <province name="Yorkshire" country="britain" short="yor" type="coast">
+  <neighbour>Edi</neighbour>
+  <neighbour>Lpl</neighbour>
+  <neighbour>Wal</neighbour>
+  <neighbour>Lon</neighbour>
+  <neighbour>Nth</neighbour>
+ </province>
+ <province name="London" country="britain" short="lon" type="coast">
+  <neighbour>Yor</neighbour>
+  <neighbour>Wal</neighbour>
+  <neighbour>Eng</neighbour>
+  <neighbour>Nth</neighbour>
+ </province>
+ <province name="Ion Sea" country="seas" short="ion" type="sea">
+  <neighbour>Tyn</neighbour>
+  <neighbour>Tun</neighbour>
+  <neighbour>Adr</neighbour>
+  <neighbour>Nap</neighbour>
+  <neighbour>Apu</neighbour>
+  <neighbour>Alb</neighbour>
+  <neighbour>Gre</neighbour>
+  <neighbour>Aeg</neighbour>
+  <neighbour>Eas</neighbour>
+ </province>
+ <province name="Eastern Mediterrean" country="seas" short="eas" type="sea">
+  <neighbour>Ion</neighbour>
+  <neighbour>Aeg</neighbour>
+  <neighbour>Smy</neighbour>
+  <neighbour>Syr</neighbour>
+ </province>
+ <province name="Tyrrhenian Sea" country="seas" short="tyn" type="sea">
+  <neighbour>Lyo</neighbour>
+  <neighbour>Tus</neighbour>
+  <neighbour>Rom</neighbour>
+  <neighbour>Nap</neighbour>
+  <neighbour>Tun</neighbour>
+  <neighbour>Ion</neighbour>
+  <neighbour>Wes</neighbour>
+ </province>
+ <province name="Adriatic Sea" country="seas" short="adr" type="sea">
+  <neighbour>Tri</neighbour>
+  <neighbour>Ven</neighbour>
+  <neighbour>Apu</neighbour>
+  <neighbour>Alb</neighbour>
+  <neighbour>Ion</neighbour>
+ </province>
+ <province name="Heligoland Bight" country="seas" short="hel" type="sea">
+  <neighbour>Den</neighbour>
+  <neighbour>Hol</neighbour>
+  <neighbour>Nth</neighbour>
+  <neighbour>Kie</neighbour>
+ </province>
+ <province name="North Sea" country="seas" short="nth" type="sea">
+  <neighbour>Edi</neighbour>
+  <neighbour>Yor</neighbour>
+  <neighbour>Lon</neighbour>
+  <neighbour>Hel</neighbour>
+  <neighbour>Hol</neighbour>
+  <neighbour>Bel</neighbour>
+  <neighbour>Ska</neighbour>
+  <neighbour>Den</neighbour>
+  <neighbour>Nwy</neighbour>
+  <neighbour>Nrg</neighbour>
+  <neighbour>Eng</neighbour>
+ </province>
+ <province name="Kiel" country="germany" supply="yes" short="kie" type="coast">
+  <neighbour>Hel</neighbour>
+  <neighbour>Hol</neighbour>
+  <neighbour>Den</neighbour>
+  <neighbour>Ber</neighbour>
+  <neighbour>Bal</neighbour>
+  <neighbour>Ruh</neighbour>
+  <neighbour>Mun</neighbour>
+ </province> 
+ <province name="Denmark" supply="yes" short="den" type="coast">
+  <neighbour>Hel</neighbour>
+  <neighbour>Nth</neighbour>
+  <neighbour>Ska</neighbour>
+  <neighbour>Swe</neighbour>
+  <neighbour>Kie</neighbour>
+  <neighbour>Bal</neighbour>
+ </province>
+ <province name="Skagerrack" country="seas" short="ska" type="sea">
+  <neighbour>Nwy</neighbour>
+  <neighbour>Nth</neighbour>
+  <neighbour>Den</neighbour>
+  <neighbour>Swe</neighbour>
+ </province>
+ <province name="Baltic Sea" country="seas" short="bal" type="sea">
+  <neighbour>Swe</neighbour>
+  <neighbour>Pru</neighbour>
+  <neighbour>Ber</neighbour>
+  <neighbour>Den</neighbour>
+  <neighbour>Bot</neighbour>
+  <neighbour>Kie</neighbour>
+  <neighbour>Lvn</neighbour>
+ </province>
+ <province name="Prussia" country="germany" short="pru" type="coast">
+  <neighbour>Bal</neighbour>
+  <neighbour>Ber</neighbour>
+  <neighbour>Lvn</neighbour>
+  <neighbour>Sil</neighbour>
+  <neighbour>War</neighbour>
+ </province>
+ <province name="Berlin" country="germany" supply="yes" short="ber" type="coast">
+  <neighbour>Pru</neighbour>
+  <neighbour>Sil</neighbour>
+  <neighbour>Mun</neighbour>
+  <neighbour>Kie</neighbour>
+  <neighbour>Bal</neighbour>
+ </province>
+ <province name="Sweden" supply="yes" short="swe" type="coast">
+  <neighbour>Den</neighbour>
+  <neighbour>Ska</neighbour>
+  <neighbour>Bal</neighbour>
+  <neighbour>Bot</neighbour>
+  <neighbour>Nwy</neighbour>
+  <neighbour>Fin</neighbour>
+ </province>
+ <province name="Norway" supply="yes" short="nwy" type="coast">
+  <neighbour>Nrg</neighbour>
+  <neighbour>Bar</neighbour>
+  <neighbour>Fin</neighbour>
+  <neighbour>Swe</neighbour>
+  <neighbour>Ska</neighbour>
+  <neighbour>Nth</neighbour>
+  <neighbour to="A">Stp</neighbour>
+ </province>
+ <province name="St Petersburg" supply="yes" coastA="North Coast" coastB="West Coast" short="stp" type="coast">
+  <neighbour from="B">Fin</neighbour>
+  <neighbour from="A">Bar</neighbour>
+  <neighbour from="A">Nwy</neighbour>
+  <neighbour from="B">Bot</neighbour>
+  <neighbour from="B">Lvn</neighbour>
+  <neighbour>Mos</neighbour>
+ </province>
+ <province name="Barents Sea" short="bar" type="sea">
+  <neighbour to="A">Stp</neighbour>
+  <neighbour>Nrg</neighbour>
+  <neighbour>Nwy</neighbour>
+ </province>
+ <province name="Livonia" short="lvn" type="coast">
+  <neighbour to="B">Stp</neighbour>
+  <neighbour>Bot</neighbour>
+  <neighbour>Bal</neighbour>
+  <neighbour>Mos</neighbour>
+  <neighbour>Pru</neighbour>
+  <neighbour>War</neighbour>
+ </province>
+ <province name="Gulf of Botania" short="bot" type="sea">
+  <neighbour>Fin</neighbour>
+  <neighbour to="B">Stp</neighbour>
+  <neighbour>Bal</neighbour>
+  <neighbour>Swe</neighbour>
+  <neighbour>Lvn</neighbour>
+ </province>
+ <province name="Finland" short="fin" type="coast">
+  <neighbour>Nwy</neighbour>
+  <neighbour>Swe</neighbour>
+  <neighbour>Bot</neighbour>
+  <neighbour to="B">Stp</neighbour>
+ </province> 
+ <province name="Smyrna" country="turkey" supply="yes" short="smy" type="coast">
+  <neighbour>Con</neighbour>
+  <neighbour>Ank</neighbour>
+  <neighbour>Aeg</neighbour>
+  <neighbour>Eas</neighbour>
+  <neighbour>Syr</neighbour>
+  <neighbour>Arm</neighbour>
+ </province>
+ <province name="Bulgaria" supply="yes" short="bul" coastA="South Coast" coastB="East Coast" type="coast">
+  <neighbour from="B">Rum</neighbour>
+  <neighbour>Ser</neighbour>
+  <neighbour from="A">Gre</neighbour>
+  <neighbour >Con</neighbour>
+  <neighbour from="B">Bla</neighbour>
+  <neighbour from="A">Aeg</neighbour>
+ </province>
+ <province name="Black Sea" country="seas" type="sea" short="bla">
+  <neighbour>Rum</neighbour>
+  <neighbour to="B">Bul</neighbour>
+  <neighbour>Con</neighbour>
+  <neighbour>Ank</neighbour>
+  <neighbour>Sev</neighbour>
+  <neighbour>Arm</neighbour>
+ </province>
+ <province name="Constantinople" country="turkey" type="coast" short="con">
+  <neighbour>Smy</neighbour>
+  <neighbour>Bul</neighbour>
+  <neighbour>Aeg</neighbour>
+  <neighbour>Ank</neighbour>
+  <neighbour>Bla</neighbour>
+ </province>
+ <province name="Rumania" type="coast" short="rum">
+  <neighbour to="B">Bul</neighbour>
+  <neighbour>Sev</neighbour>
+  <neighbour>Ukr</neighbour>
+  <neighbour>Gal</neighbour>
+  <neighbour>Bud</neighbour>
+  <neighbour>Ser</neighbour>
+  <neighbour>Bla</neighbour>
+ </province>
+ <province name="Aegean Sea" country="seas" type="sea" short="aeg">
+  <neighbour>Gre</neighbour>
+  <neighbour>Ion</neighbour>
+  <neighbour>Eas</neighbour>
+  <neighbour>Smy</neighbour>
+  <neighbour>Con</neighbour>
+  <neighbour to="A">Bul</neighbour>
+ </province>
+</map>
