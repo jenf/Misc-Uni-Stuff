@@ -31,7 +31,9 @@ public class Move implements Comparable
         return country.compareTo(((Move)b).getCountry());
       }
       else
-      return country.compareTo(b);
+      {
+       return country.compareTo((String) b);
+      }
     }
     public boolean equals(Object b)
     {

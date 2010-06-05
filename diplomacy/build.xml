@@ -6,7 +6,9 @@
 
     <target name="compile">
         <mkdir dir="build/classes"/>
-        <javac source="1.4" srcdir="src" destdir="build/classes" />
+        <javac srcdir="src" destdir="build/classes">
+         <compilerarg value="-Xlint"/>
+        </javac>
     </target>
 
     <target name="jar">
