@@ -1,0 +1,1554 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 24 24 571 818
+%%Title: Enscript Output
+%%For: Jennifer Freeman
+%%Creator: GNU enscript 1.6.1
+%%CreationDate: Tue Dec 11 13:50:34 2001
+%%Orientation: Portrait
+%%Pages: (atend)
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: (atend)
+%%EndComments
+%%BeginProlog
+%%BeginResource: procset Enscript-Prolog 1.6 1
+%
+% Procedures.
+%
+
+/_S {	% save current state
+  /_s save def
+} def
+/_R {	% restore from saved state
+  _s restore
+} def
+
+/S {	% showpage protecting gstate
+  gsave
+  showpage
+  grestore
+} bind def
+
+/MF {	% fontname newfontname -> -	make a new encoded font
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  % insert only valid encoding vectors
+  encoding_vector length 256 eq {
+    newfont /Encoding encoding_vector put
+  } if
+
+  newfontname newfont definefont pop
+} def
+
+/SF { % fontname width height -> -	set a new font
+  /height exch def
+  /width exch def
+
+  findfont
+  [width 0 0 height 0 0] makefont setfont
+} def
+
+/SUF { % fontname width height -> -	set a new user font
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF
+  /F-gs-user-font width height SF
+} def
+
+/M {moveto} bind def
+/s {show} bind def
+
+/Box {	% x y w h -> -			define box path
+  /d_h exch def /d_w exch def /d_y exch def /d_x exch def
+  d_x d_y  moveto
+  d_w 0 rlineto
+  0 d_h rlineto
+  d_w neg 0 rlineto
+  closepath
+} def
+
+/bgs {	% x y height blskip gray str -> -	show string with bg color
+  /str exch def
+  /gray exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    gray setgray
+    fill
+  grestore
+  x y M str s
+} def
+
+% Highlight bars.
+/highlight_bars {	% nlines lineheight output_y_margin gray -> -
+  gsave
+    setgray
+    /ymarg exch def
+    /lineheight exch def
+    /nlines exch def
+
+    % This 2 is just a magic number to sync highlight lines to text.
+    0 d_header_y ymarg sub 2 sub translate
+
+    /cw d_output_w cols div def
+    /nrows d_output_h ymarg 2 mul sub lineheight div cvi def
+
+    % for each column
+    0 1 cols 1 sub {
+      cw mul /xp exch def
+
+      % for each rows
+      0 1 nrows 1 sub {
+        /rn exch def
+        rn lineheight mul neg /yp exch def
+        rn nlines idiv 2 mod 0 eq {
+	  % Draw highlight bar.  4 is just a magic indentation.
+	  xp 4 add yp cw 8 sub lineheight neg Box fill
+	} if
+      } for
+    } for
+
+  grestore
+} def
+
+% Line highlight bar.
+/line_highlight {	% x y width height gray -> -
+  gsave
+    /gray exch def
+    Box gray setgray fill
+  grestore
+} def
+
+% Column separator lines.
+/column_lines {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h translate
+    /cw d_output_w cols div def
+    1 1 cols 1 sub {
+      cw mul 0 moveto
+      0 d_output_h rlineto stroke
+    } for
+  grestore
+} def
+
+% Column borders.
+/column_borders {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h moveto
+    0 d_output_h rlineto
+    d_output_w 0 rlineto
+    0 d_output_h neg rlineto
+    closepath stroke
+  grestore
+} def
+
+% Do the actual underlay drawing
+/draw_underlay {
+  ul_style 0 eq {
+    ul_str true charpath stroke
+  } {
+    ul_str show
+  } ifelse
+} def
+
+% Underlay
+/underlay {	% - -> -
+  gsave
+    0 d_page_h translate
+    d_page_h neg d_page_w atan rotate
+
+    ul_gray setgray
+    ul_font setfont
+    /dw d_page_h dup mul d_page_w dup mul add sqrt def
+    ul_str stringwidth pop dw exch sub 2 div ul_h_ptsize -2 div moveto
+    draw_underlay
+  grestore
+} def
+
+/user_underlay {	% - -> -
+  gsave
+    ul_x ul_y translate
+    ul_angle rotate
+    ul_gray setgray
+    ul_font setfont
+    0 0 ul_h_ptsize 2 div sub moveto
+    draw_underlay
+  grestore
+} def
+
+% Page prefeed
+/page_prefeed {		% bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} def
+
+% Wrapped line markers
+/wrapped_line_mark {	% x y charwith charheight type -> -
+  /type exch def
+  /h exch def
+  /w exch def
+  /y exch def
+  /x exch def
+
+  type 2 eq {
+    % Black boxes (like TeX does)
+    gsave
+      0 setlinewidth
+      x w 4 div add y M
+      0 h rlineto w 2 div 0 rlineto 0 h neg rlineto
+      closepath fill
+    grestore
+  } {
+    type 3 eq {
+      % Small arrows
+      gsave
+        .2 setlinewidth
+        x w 2 div add y h 2 div add M
+        w 4 div 0 rlineto
+        x w 4 div add y lineto stroke
+
+        x w 4 div add w 8 div add y h 4 div add M
+        x w 4 div add y lineto
+	w 4 div h 8 div rlineto stroke
+      grestore
+    } {
+      % do nothing
+    } ifelse
+  } ifelse
+} def
+
+% EPSF import.
+
+/BeginEPSF {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack
+  userdict begin
+  /showpage { } def
+  0 setgray 0 setlinecap
+  1 setlinewidth 0 setlinejoin
+  10 setmiterlimit [ ] 0 setdash newpath
+  /languagelevel where {
+    pop languagelevel
+    1 ne {
+      false setstrokeadjust false setoverprint
+    } if
+  } if
+} bind def
+
+/EndEPSF {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+%%EndResource
+%%BeginResource: procset Enscript-Encoding-88591 1.6 1
+/encoding_vector [
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclam       	/quotedbl     	/numbersign   	
+/dollar       	/percent      	/ampersand    	/quoteright   	
+/parenleft    	/parenright   	/asterisk     	/plus         	
+/comma        	/hyphen       	/period       	/slash        	
+/zero         	/one          	/two          	/three        	
+/four         	/five         	/six          	/seven        	
+/eight        	/nine         	/colon        	/semicolon    	
+/less         	/equal        	/greater      	/question     	
+/at           	/A            	/B            	/C            	
+/D            	/E            	/F            	/G            	
+/H            	/I            	/J            	/K            	
+/L            	/M            	/N            	/O            	
+/P            	/Q            	/R            	/S            	
+/T            	/U            	/V            	/W            	
+/X            	/Y            	/Z            	/bracketleft  	
+/backslash    	/bracketright 	/asciicircum  	/underscore   	
+/quoteleft    	/a            	/b            	/c            	
+/d            	/e            	/f            	/g            	
+/h            	/i            	/j            	/k            	
+/l            	/m            	/n            	/o            	
+/p            	/q            	/r            	/s            	
+/t            	/u            	/v            	/w            	
+/x            	/y            	/z            	/braceleft    	
+/bar          	/braceright   	/tilde        	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclamdown   	/cent         	/sterling     	
+/currency     	/yen          	/brokenbar    	/section      	
+/dieresis     	/copyright    	/ordfeminine  	/guillemotleft	
+/logicalnot   	/hyphen       	/registered   	/macron       	
+/degree       	/plusminus    	/twosuperior  	/threesuperior	
+/acute        	/mu           	/paragraph    	/bullet       	
+/cedilla      	/onesuperior  	/ordmasculine 	/guillemotright	
+/onequarter   	/onehalf      	/threequarters	/questiondown 	
+/Agrave       	/Aacute       	/Acircumflex  	/Atilde       	
+/Adieresis    	/Aring        	/AE           	/Ccedilla     	
+/Egrave       	/Eacute       	/Ecircumflex  	/Edieresis    	
+/Igrave       	/Iacute       	/Icircumflex  	/Idieresis    	
+/Eth          	/Ntilde       	/Ograve       	/Oacute       	
+/Ocircumflex  	/Otilde       	/Odieresis    	/multiply     	
+/Oslash       	/Ugrave       	/Uacute       	/Ucircumflex  	
+/Udieresis    	/Yacute       	/Thorn        	/germandbls   	
+/agrave       	/aacute       	/acircumflex  	/atilde       	
+/adieresis    	/aring        	/ae           	/ccedilla     	
+/egrave       	/eacute       	/ecircumflex  	/edieresis    	
+/igrave       	/iacute       	/icircumflex  	/idieresis    	
+/eth          	/ntilde       	/ograve       	/oacute       	
+/ocircumflex  	/otilde       	/odieresis    	/divide       	
+/oslash       	/ugrave       	/uacute       	/ucircumflex  	
+/udieresis    	/yacute       	/thorn        	/ydieresis    	
+] def
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Courier
+/HFpt_w 10 def
+/HFpt_h 10 def
+/Courier-Bold /HF-gs-font MF
+/HF /HF-gs-font findfont [HFpt_w 0 0 HFpt_h 0 0] makefont def
+/Courier /F-gs-font MF
+/F-gs-font 10 10 SF
+/#copies 1 def
+% Pagedevice definitions:
+gs_languagelevel 1 gt {
+  <<
+    /PageSize [595 842] 
+  >> setpagedevice
+} if
+%%BeginResource: procset Enscript-Header-simple 1.6 1
+
+/do_header {	% print default simple header
+  gsave
+    d_header_x d_header_y HFpt_h 3 div add translate
+
+    HF setfont
+    user_header_p {
+      5 0 moveto user_header_left_str show
+
+      d_header_w user_header_center_str stringwidth pop sub 2 div
+      0 moveto user_header_center_str show
+
+      d_header_w user_header_right_str stringwidth pop sub 5 sub
+      0 moveto user_header_right_str show
+    } {
+      5 0 moveto fname show
+      45 0 rmoveto fmodstr show
+      45 0 rmoveto pagenumstr show
+    } ifelse
+
+  grestore
+} def
+%%EndResource
+/d_page_w 547 def
+/d_page_h 794 def
+/d_header_x 0 def
+/d_header_y 779 def
+/d_header_w 547 def
+/d_header_h 15 def
+/d_footer_x 0 def
+/d_footer_y 0 def
+/d_footer_w 547 def
+/d_footer_h 0 def
+/d_output_w 547 def
+/d_output_h 779 def
+/cols 1 def
+%%EndSetup
+%%Page: (1) 1
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 1 def
+/fname (Diplomacy.java) def
+/fdir () def
+/ftail (Diplomacy.java) def
+% User defined strings:
+/fmodstr (Tue Dec 11 13:50:14 2001) def
+/pagenumstr (1) def
+/user_header_p true def
+/user_header_left_str (Appendix A:Diplomacy.java\(Page 1 of 3\)) def
+/user_header_center_str () def
+/user_header_right_str () def
+%%EndPageSetup
+do_header
+/Courier-Oblique 10 10 SUF
+5 766 M
+(// Diplomacy.java) s
+/F-gs-font 10 10 SF
+/Courier-Oblique 10 10 SUF
+5 755 M
+(// Most code is work of Jennifer Freeman, 2001) s
+/F-gs-font 10 10 SF
+/Courier-Oblique 10 10 SUF
+5 744 M
+(/* Some of this code is based on an example from Apache's crimson-1.1.3 xml parser ) s
+5 733 M
+(   The startElement, endElement, characters, endDocument, startDocument, main have been) s
+5 722 M
+(   rewritten to load the data for diplomacy */) s
+/F-gs-font 10 10 SF
+5 711 M
+( ) s
+/Courier-Bold 10 10 SUF
+5 700 M
+(import) s
+/F-gs-font 10 10 SF
+41 700 M
+( javax.xml.parsers.*;) s
+/Courier-Bold 10 10 SUF
+5 689 M
+(import) s
+/F-gs-font 10 10 SF
+41 689 M
+( org.xml.sax.*;) s
+/Courier-Bold 10 10 SUF
+5 678 M
+(import) s
+/F-gs-font 10 10 SF
+41 678 M
+( org.xml.sax.helpers.*;) s
+/Courier-Bold 10 10 SUF
+5 667 M
+(import) s
+/F-gs-font 10 10 SF
+41 667 M
+( javax.swing.*;) s
+/Courier-Bold 10 10 SUF
+5 656 M
+(import) s
+/F-gs-font 10 10 SF
+41 656 M
+( java.util.*;) s
+/Courier-Bold 10 10 SUF
+5 645 M
+(import) s
+/F-gs-font 10 10 SF
+41 645 M
+( java.io.*;) s
+/Courier-Bold 10 10 SUF
+5 623 M
+(public) s
+/F-gs-font 10 10 SF
+41 623 M
+( ) s
+/Courier-Bold 10 10 SUF
+47 623 M
+(class) s
+/F-gs-font 10 10 SF
+77 623 M
+( Diplomacy ) s
+/Courier-Bold 10 10 SUF
+143 623 M
+(extends) s
+/F-gs-font 10 10 SF
+185 623 M
+( DefaultHandler {) s
+5 601 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 601 M
+(private) s
+/F-gs-font 10 10 SF
+71 601 M
+( String current;) s
+5 590 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 590 M
+(private) s
+/F-gs-font 10 10 SF
+71 590 M
+( String neighbourname;) s
+5 579 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 579 M
+(private) s
+/F-gs-font 10 10 SF
+71 579 M
+( String neighbourfrom;) s
+5 568 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 568 M
+(private) s
+/F-gs-font 10 10 SF
+71 568 M
+( String neighbourto;) s
+5 557 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 557 M
+(private) s
+/F-gs-font 10 10 SF
+71 557 M
+( String currentcountry;) s
+5 546 M
+(    ) s
+5 535 M
+(    ) s
+/Courier-Oblique 10 10 SUF
+29 535 M
+(// This gets called when an element starts) s
+/F-gs-font 10 10 SF
+5 524 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 524 M
+(public) s
+/F-gs-font 10 10 SF
+65 524 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 524 M
+(void) s
+/F-gs-font 10 10 SF
+95 524 M
+( startElement\(String namespaceURI, String localName,) s
+5 513 M
+(                             String qName, Attributes attrs\)) s
+5 502 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 502 M
+(throws) s
+/F-gs-font 10 10 SF
+89 502 M
+( SAXException) s
+5 491 M
+(    {) s
+5 480 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 480 M
+(if) s
+/F-gs-font 10 10 SF
+65 480 M
+( \(qName.equals\() s
+/Courier-Bold 10 10 SUF
+155 480 M
+("province") s
+/F-gs-font 10 10 SF
+215 480 M
+(\)\)) s
+5 469 M
+(        {) s
+5 458 M
+(         Country n;) s
+5 447 M
+(         String bar;) s
+5 436 M
+(         String pa,pb;) s
+5 414 M
+(         ) s
+/Courier-Bold 10 10 SUF
+59 414 M
+(boolean) s
+/F-gs-font 10 10 SF
+101 414 M
+( foo=) s
+/Courier-Bold 10 10 SUF
+131 414 M
+(false) s
+/F-gs-font 10 10 SF
+161 414 M
+(;) s
+5 403 M
+(         bar=attrs.getValue\() s
+/Courier-Bold 10 10 SUF
+173 403 M
+("supply") s
+/F-gs-font 10 10 SF
+221 403 M
+(\);) s
+5 392 M
+(         ) s
+/Courier-Bold 10 10 SUF
+59 392 M
+(if) s
+/F-gs-font 10 10 SF
+71 392 M
+( \(bar==) s
+/Courier-Bold 10 10 SUF
+113 392 M
+(null) s
+/F-gs-font 10 10 SF
+137 392 M
+(\) foo=) s
+/Courier-Bold 10 10 SUF
+173 392 M
+(false) s
+/F-gs-font 10 10 SF
+203 392 M
+(;) s
+5 381 M
+(         ) s
+/Courier-Bold 10 10 SUF
+59 381 M
+(else) s
+/F-gs-font 10 10 SF
+83 381 M
+( {) s
+/Courier-Bold 10 10 SUF
+95 381 M
+(if) s
+/F-gs-font 10 10 SF
+107 381 M
+( \(bar.equals\() s
+/Courier-Bold 10 10 SUF
+185 381 M
+("yes") s
+/F-gs-font 10 10 SF
+215 381 M
+(\)\) foo=) s
+/Courier-Bold 10 10 SUF
+257 381 M
+(true) s
+/F-gs-font 10 10 SF
+281 381 M
+(;}) s
+5 370 M
+(         pa=attrs.getValue\() s
+/Courier-Bold 10 10 SUF
+167 370 M
+("coastA") s
+/F-gs-font 10 10 SF
+215 370 M
+(\);) s
+5 359 M
+(         pb=attrs.getValue\() s
+/Courier-Bold 10 10 SUF
+167 359 M
+("coastB") s
+/F-gs-font 10 10 SF
+215 359 M
+(\);) s
+5 348 M
+(         currentcountry=attrs.getValue\() s
+/Courier-Bold 10 10 SUF
+239 348 M
+("short") s
+/F-gs-font 10 10 SF
+281 348 M
+(\);) s
+5 337 M
+(         Map.addCountry\(currentcountry,pa,pb,attrs.getValue\() s
+/Courier-Bold 10 10 SUF
+365 337 M
+("name") s
+/F-gs-font 10 10 SF
+401 337 M
+(\),) s
+5 326 M
+(                         attrs.getValue\() s
+/Courier-Bold 10 10 SUF
+245 326 M
+("type") s
+/F-gs-font 10 10 SF
+281 326 M
+(\),foo\);) s
+5 315 M
+(        }) s
+5 304 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 304 M
+(if) s
+/F-gs-font 10 10 SF
+65 304 M
+( \(qName.equals\() s
+/Courier-Bold 10 10 SUF
+155 304 M
+("neighbour") s
+/F-gs-font 10 10 SF
+221 304 M
+(\)\)) s
+5 293 M
+(        {) s
+5 282 M
+(         neighbourname=) s
+/Courier-Bold 10 10 SUF
+143 282 M
+(new) s
+/F-gs-font 10 10 SF
+161 282 M
+( String\(\);) s
+5 271 M
+(         neighbourfrom=attrs.getValue\() s
+/Courier-Bold 10 10 SUF
+233 271 M
+("from") s
+/F-gs-font 10 10 SF
+269 271 M
+(\);) s
+5 260 M
+(         neighbourto=attrs.getValue\() s
+/Courier-Bold 10 10 SUF
+221 260 M
+("to") s
+/F-gs-font 10 10 SF
+245 260 M
+(\);) s
+5 249 M
+(        }) s
+5 238 M
+(        current=qName;) s
+5 227 M
+(    }) s
+5 216 M
+(    ) s
+/Courier-Oblique 10 10 SUF
+29 216 M
+(// This gets called when we get a bit of data inside tags.) s
+/F-gs-font 10 10 SF
+5 205 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 205 M
+(public) s
+/F-gs-font 10 10 SF
+65 205 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 205 M
+(void) s
+/F-gs-font 10 10 SF
+95 205 M
+( characters\() s
+/Courier-Bold 10 10 SUF
+167 205 M
+(char) s
+/F-gs-font 10 10 SF
+191 205 M
+([] ch, ) s
+/Courier-Bold 10 10 SUF
+233 205 M
+(int) s
+/F-gs-font 10 10 SF
+251 205 M
+( start, ) s
+/Courier-Bold 10 10 SUF
+299 205 M
+(int) s
+/F-gs-font 10 10 SF
+317 205 M
+( length\)) s
+5 194 M
+(    { ) s
+5 183 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 183 M
+(if) s
+/F-gs-font 10 10 SF
+65 183 M
+( \(current.equals\() s
+/Courier-Bold 10 10 SUF
+167 183 M
+("neighbour") s
+/F-gs-font 10 10 SF
+233 183 M
+(\)\)) s
+5 172 M
+(        {) s
+5 161 M
+(            String bar;) s
+5 150 M
+(            bar=) s
+/Courier-Bold 10 10 SUF
+101 150 M
+(new) s
+/F-gs-font 10 10 SF
+119 150 M
+( String\(ch,start,length\);) s
+5 139 M
+(            neighbourname+=bar;) s
+5 128 M
+(        }) s
+5 117 M
+(    }) s
+5 106 M
+(    ) s
+5 95 M
+(    ) s
+/Courier-Oblique 10 10 SUF
+29 95 M
+(// This gets called when an element has ended.) s
+/F-gs-font 10 10 SF
+5 84 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 84 M
+(public) s
+/F-gs-font 10 10 SF
+65 84 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 84 M
+(void) s
+/F-gs-font 10 10 SF
+95 84 M
+( endElement\(String namespaceURI, String localName,) s
+5 73 M
+(                             String qName\) ) s
+/Courier-Bold 10 10 SUF
+263 73 M
+(throws) s
+/F-gs-font 10 10 SF
+299 73 M
+( SAXException) s
+5 62 M
+(    {) s
+5 51 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 51 M
+(if) s
+/F-gs-font 10 10 SF
+65 51 M
+( \(qName.equals\() s
+/Courier-Bold 10 10 SUF
+155 51 M
+("neighbour") s
+/F-gs-font 10 10 SF
+221 51 M
+(\)\)) s
+5 40 M
+(        {) s
+5 29 M
+(           Map.AddLink\(currentcountry,neighbourname,neighbourfrom,neighbourto\);) s
+5 18 M
+(        }) s
+5 7 M
+(    }) s
+_R
+S
+%%Page: (2) 2
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 2 def
+/fname (Diplomacy.java) def
+/fdir () def
+/ftail (Diplomacy.java) def
+% User defined strings:
+/fmodstr (Tue Dec 11 13:50:14 2001) def
+/pagenumstr (2) def
+/user_header_p true def
+/user_header_left_str (Appendix A:Diplomacy.java\(Page 2 of 3\)) def
+/user_header_center_str () def
+/user_header_right_str () def
+%%EndPageSetup
+do_header
+5 766 M
+(    ) s
+5 755 M
+(    ) s
+/Courier-Oblique 10 10 SUF
+29 755 M
+(// this gets called when we've got to the end of the file.) s
+/F-gs-font 10 10 SF
+5 744 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 744 M
+(public) s
+/F-gs-font 10 10 SF
+65 744 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 744 M
+(void) s
+/F-gs-font 10 10 SF
+95 744 M
+( endDocument\(\) ) s
+/Courier-Bold 10 10 SUF
+185 744 M
+(throws) s
+/F-gs-font 10 10 SF
+221 744 M
+( SAXException) s
+5 733 M
+(    {) s
+5 722 M
+(        Country bar;) s
+5 711 M
+(        bar=Map.getCountry\() s
+/Courier-Bold 10 10 SUF
+167 711 M
+("ber") s
+/F-gs-font 10 10 SF
+197 711 M
+(\);) s
+5 700 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 700 M
+(// Check the file is complete) s
+/F-gs-font 10 10 SF
+5 689 M
+(        System.out.println\() s
+/Courier-Bold 10 10 SUF
+167 689 M
+("--Running Consistancy Checker--") s
+/F-gs-font 10 10 SF
+365 689 M
+(\);) s
+5 678 M
+(        bar.check\(\);) s
+5 667 M
+(        System.out.println\() s
+/Courier-Bold 10 10 SUF
+167 667 M
+("--Complete--") s
+/F-gs-font 10 10 SF
+251 667 M
+(\);) s
+5 656 M
+(    }) s
+5 634 M
+(    ) s
+/Courier-Oblique 10 10 SUF
+29 634 M
+(/**) s
+5 623 M
+(     * Convert from a filename to a file URL.) s
+5 612 M
+(     */) s
+/F-gs-font 10 10 SF
+5 601 M
+(    ) s
+/Courier-Oblique 10 10 SUF
+29 601 M
+(// Part of the crimson example) s
+/F-gs-font 10 10 SF
+5 590 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 590 M
+(private) s
+/F-gs-font 10 10 SF
+71 590 M
+( ) s
+/Courier-Bold 10 10 SUF
+77 590 M
+(static) s
+/F-gs-font 10 10 SF
+113 590 M
+( String convertToFileURL\(String filename\) {) s
+5 579 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 579 M
+(// On JDK 1.2 and later, simplify this to:) s
+/F-gs-font 10 10 SF
+5 568 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 568 M
+(// "path = file.toURL\(\).toString\(\)".) s
+/F-gs-font 10 10 SF
+5 557 M
+(        String path = ) s
+/Courier-Bold 10 10 SUF
+137 557 M
+(new) s
+/F-gs-font 10 10 SF
+155 557 M
+( File\(filename\).getAbsolutePath\(\);) s
+5 546 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 546 M
+(if) s
+/F-gs-font 10 10 SF
+65 546 M
+( \(File.separatorChar != ) s
+/Courier-Bold 10 10 SUF
+209 546 M
+('/') s
+/F-gs-font 10 10 SF
+227 546 M
+(\) {) s
+5 535 M
+(            path = path.replace\(File.separatorChar, ) s
+/Courier-Bold 10 10 SUF
+317 535 M
+('/') s
+/F-gs-font 10 10 SF
+335 535 M
+(\);) s
+5 524 M
+(        }) s
+5 513 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 513 M
+(if) s
+/F-gs-font 10 10 SF
+65 513 M
+( \(!path.startsWith\() s
+/Courier-Bold 10 10 SUF
+179 513 M
+("/") s
+/F-gs-font 10 10 SF
+197 513 M
+(\)\) {) s
+5 502 M
+(            path = ) s
+/Courier-Bold 10 10 SUF
+119 502 M
+("/") s
+/F-gs-font 10 10 SF
+137 502 M
+( + path;) s
+5 491 M
+(        }) s
+5 480 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 480 M
+(return) s
+/F-gs-font 10 10 SF
+89 480 M
+( ) s
+/Courier-Bold 10 10 SUF
+95 480 M
+("file:") s
+/F-gs-font 10 10 SF
+137 480 M
+( + path;) s
+5 469 M
+(    }) s
+5 458 M
+(    ) s
+5 447 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 447 M
+(static) s
+/F-gs-font 10 10 SF
+65 447 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 447 M
+(public) s
+/F-gs-font 10 10 SF
+107 447 M
+( ) s
+/Courier-Bold 10 10 SUF
+113 447 M
+(void) s
+/F-gs-font 10 10 SF
+137 447 M
+( main\(String[] args\) {) s
+5 436 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 436 M
+(// Create a JAXP SAXParserFactory and configure it) s
+/F-gs-font 10 10 SF
+5 425 M
+(        SAXParserFactory spf = SAXParserFactory.newInstance\(\);) s
+5 414 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 414 M
+(// we don't want to check it against the dtd.) s
+/F-gs-font 10 10 SF
+5 403 M
+(        spf.setValidating\() s
+/Courier-Bold 10 10 SUF
+161 403 M
+(false) s
+/F-gs-font 10 10 SF
+191 403 M
+(\);) s
+5 381 M
+(        XMLReader xmlReader = ) s
+/Courier-Bold 10 10 SUF
+185 381 M
+(null) s
+/F-gs-font 10 10 SF
+209 381 M
+(;) s
+5 370 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 370 M
+(try) s
+/F-gs-font 10 10 SF
+71 370 M
+( {) s
+5 359 M
+(            ) s
+/Courier-Oblique 10 10 SUF
+77 359 M
+(// Create a JAXP SAXParser) s
+/F-gs-font 10 10 SF
+5 348 M
+(            SAXParser saxParser = spf.newSAXParser\(\);) s
+5 326 M
+(            ) s
+/Courier-Oblique 10 10 SUF
+77 326 M
+(// Get the encapsulated SAX XMLReader) s
+/F-gs-font 10 10 SF
+5 315 M
+(            xmlReader = saxParser.getXMLReader\(\);) s
+5 304 M
+(        } ) s
+/Courier-Bold 10 10 SUF
+65 304 M
+(catch) s
+/F-gs-font 10 10 SF
+95 304 M
+( \(Exception ex\) {) s
+5 293 M
+(            System.err.println\(ex\);) s
+5 282 M
+(            System.exit\(1\);) s
+5 271 M
+(        }) s
+5 249 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 249 M
+(// Set the ContentHandler of the XMLReader) s
+/F-gs-font 10 10 SF
+5 238 M
+(        xmlReader.setContentHandler\() s
+/Courier-Bold 10 10 SUF
+221 238 M
+(new) s
+/F-gs-font 10 10 SF
+239 238 M
+( Diplomacy\(\)\);) s
+5 216 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 216 M
+(// Set an ErrorHandler before parsing) s
+/F-gs-font 10 10 SF
+5 205 M
+(        xmlReader.setErrorHandler\() s
+/Courier-Bold 10 10 SUF
+209 205 M
+(new) s
+/F-gs-font 10 10 SF
+227 205 M
+( MyErrorHandler\(System.err\)\);) s
+5 183 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 183 M
+(try) s
+/F-gs-font 10 10 SF
+71 183 M
+( {) s
+5 172 M
+(            ) s
+/Courier-Oblique 10 10 SUF
+77 172 M
+(// Tell the XMLReader to parse the XML document) s
+/F-gs-font 10 10 SF
+5 161 M
+(            ) s
+/Courier-Oblique 10 10 SUF
+77 161 M
+(// The following three lines are mine) s
+/F-gs-font 10 10 SF
+5 150 M
+(            xmlReader.parse\(convertToFileURL\() s
+/Courier-Bold 10 10 SUF
+275 150 M
+("./diplomacy.xml") s
+/F-gs-font 10 10 SF
+377 150 M
+(\)\);) s
+5 139 M
+(            JFrame frame=) s
+/Courier-Bold 10 10 SUF
+155 139 M
+(new) s
+/F-gs-font 10 10 SF
+173 139 M
+( DipGui\(\);) s
+5 128 M
+(            frame.show\(\);) s
+5 117 M
+(        } ) s
+/Courier-Bold 10 10 SUF
+65 117 M
+(catch) s
+/F-gs-font 10 10 SF
+95 117 M
+( \(SAXException se\) {) s
+5 106 M
+(            System.err.println\(se.getMessage\(\)\);) s
+5 95 M
+(            System.exit\(1\);) s
+5 84 M
+(        } ) s
+/Courier-Bold 10 10 SUF
+65 84 M
+(catch) s
+/F-gs-font 10 10 SF
+95 84 M
+( \(IOException ioe\) {) s
+5 73 M
+(            System.err.println\(ioe\);) s
+5 62 M
+(            System.exit\(1\);) s
+5 51 M
+(        }) s
+5 40 M
+(    }) s
+5 18 M
+(    ) s
+/Courier-Oblique 10 10 SUF
+29 18 M
+(// This class is part of the crimson example) s
+/F-gs-font 10 10 SF
+5 7 M
+(    ) s
+/Courier-Oblique 10 10 SUF
+29 7 M
+(// Error handler to report errors and warnings) s
+_R
+S
+%%Page: (3) 3
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 3 def
+/fname (Diplomacy.java) def
+/fdir () def
+/ftail (Diplomacy.java) def
+/Courier-Oblique 10 10 SUF
+% User defined strings:
+/fmodstr (Tue Dec 11 13:50:14 2001) def
+/pagenumstr (3) def
+/user_header_p true def
+/user_header_left_str (Appendix A:Diplomacy.java\(Page 3 of 3\)) def
+/user_header_center_str () def
+/user_header_right_str () def
+%%EndPageSetup
+do_header
+/F-gs-font 10 10 SF
+5 766 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 766 M
+(private) s
+/F-gs-font 10 10 SF
+71 766 M
+( ) s
+/Courier-Bold 10 10 SUF
+77 766 M
+(static) s
+/F-gs-font 10 10 SF
+113 766 M
+( ) s
+/Courier-Bold 10 10 SUF
+119 766 M
+(class) s
+/F-gs-font 10 10 SF
+149 766 M
+( MyErrorHandler ) s
+/Courier-Bold 10 10 SUF
+245 766 M
+(implements) s
+/F-gs-font 10 10 SF
+305 766 M
+( ErrorHandler {) s
+5 755 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 755 M
+(/** Error handler output goes here */) s
+/F-gs-font 10 10 SF
+5 744 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 744 M
+(private) s
+/F-gs-font 10 10 SF
+95 744 M
+( PrintStream out;) s
+5 722 M
+(        MyErrorHandler\(PrintStream out\) {) s
+5 711 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 711 M
+(this) s
+/F-gs-font 10 10 SF
+101 711 M
+(.out = out;) s
+5 700 M
+(        }) s
+5 678 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 678 M
+(/**) s
+5 667 M
+(         * Returns a string describing parse exception details) s
+5 656 M
+(         */) s
+/F-gs-font 10 10 SF
+5 645 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 645 M
+(private) s
+/F-gs-font 10 10 SF
+95 645 M
+( String getParseExceptionInfo\(SAXParseException spe\) {) s
+5 634 M
+(            String systemId = spe.getSystemId\(\);) s
+5 623 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 623 M
+(if) s
+/F-gs-font 10 10 SF
+89 623 M
+( \(systemId == ) s
+/Courier-Bold 10 10 SUF
+173 623 M
+(null) s
+/F-gs-font 10 10 SF
+197 623 M
+(\) {) s
+5 612 M
+(                systemId = ) s
+/Courier-Bold 10 10 SUF
+167 612 M
+("null") s
+/F-gs-font 10 10 SF
+203 612 M
+(;) s
+5 601 M
+(            }) s
+5 590 M
+(            String info = ) s
+/Courier-Bold 10 10 SUF
+161 590 M
+("URI=") s
+/F-gs-font 10 10 SF
+197 590 M
+( + systemId +) s
+5 579 M
+(                ) s
+/Courier-Bold 10 10 SUF
+101 579 M
+(" Line=") s
+/F-gs-font 10 10 SF
+149 579 M
+( + spe.getLineNumber\(\) +) s
+5 568 M
+(                ) s
+/Courier-Bold 10 10 SUF
+101 568 M
+(": ") s
+/F-gs-font 10 10 SF
+125 568 M
+( + spe.getMessage\(\);) s
+5 557 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 557 M
+(return) s
+/F-gs-font 10 10 SF
+113 557 M
+( info;) s
+5 546 M
+(        }) s
+5 524 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 524 M
+(// The following methods are standard SAX ErrorHandler methods.) s
+/F-gs-font 10 10 SF
+5 513 M
+(        ) s
+/Courier-Oblique 10 10 SUF
+53 513 M
+(// See SAX documentation for more info.) s
+/F-gs-font 10 10 SF
+5 491 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 491 M
+(public) s
+/F-gs-font 10 10 SF
+89 491 M
+( ) s
+/Courier-Bold 10 10 SUF
+95 491 M
+(void) s
+/F-gs-font 10 10 SF
+119 491 M
+( warning\(SAXParseException spe\) ) s
+/Courier-Bold 10 10 SUF
+311 491 M
+(throws) s
+/F-gs-font 10 10 SF
+347 491 M
+( SAXException {) s
+5 480 M
+(            out.println\() s
+/Courier-Bold 10 10 SUF
+149 480 M
+("Warning: ") s
+/F-gs-font 10 10 SF
+215 480 M
+( + getParseExceptionInfo\(spe\)\);) s
+5 469 M
+(        }) s
+5 458 M
+(        ) s
+5 447 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 447 M
+(public) s
+/F-gs-font 10 10 SF
+89 447 M
+( ) s
+/Courier-Bold 10 10 SUF
+95 447 M
+(void) s
+/F-gs-font 10 10 SF
+119 447 M
+( error\(SAXParseException spe\) ) s
+/Courier-Bold 10 10 SUF
+299 447 M
+(throws) s
+/F-gs-font 10 10 SF
+335 447 M
+( SAXException {) s
+5 436 M
+(            String message = ) s
+/Courier-Bold 10 10 SUF
+179 436 M
+("Error: ") s
+/F-gs-font 10 10 SF
+233 436 M
+( + getParseExceptionInfo\(spe\);) s
+5 425 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 425 M
+(throw) s
+/F-gs-font 10 10 SF
+107 425 M
+( ) s
+/Courier-Bold 10 10 SUF
+113 425 M
+(new) s
+/F-gs-font 10 10 SF
+131 425 M
+( SAXException\(message\);) s
+5 414 M
+(        }) s
+5 392 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 392 M
+(public) s
+/F-gs-font 10 10 SF
+89 392 M
+( ) s
+/Courier-Bold 10 10 SUF
+95 392 M
+(void) s
+/F-gs-font 10 10 SF
+119 392 M
+( fatalError\(SAXParseException spe\) ) s
+/Courier-Bold 10 10 SUF
+329 392 M
+(throws) s
+/F-gs-font 10 10 SF
+365 392 M
+( SAXException {) s
+5 381 M
+(            String message = ) s
+/Courier-Bold 10 10 SUF
+179 381 M
+("Fatal Error: ") s
+/F-gs-font 10 10 SF
+269 381 M
+( + getParseExceptionInfo\(spe\);) s
+5 370 M
+(            ) s
+/Courier-Bold 10 10 SUF
+77 370 M
+(throw) s
+/F-gs-font 10 10 SF
+107 370 M
+( ) s
+/Courier-Bold 10 10 SUF
+113 370 M
+(new) s
+/F-gs-font 10 10 SF
+131 370 M
+( SAXException\(message\);) s
+5 359 M
+(        }) s
+5 348 M
+(    }) s
+5 337 M
+(}) s
+_R
+S
+%%Trailer
+%%Pages: 3
+%%DocumentNeededResources: font Courier-Oblique Courier-Bold Courier 
+%%EOF

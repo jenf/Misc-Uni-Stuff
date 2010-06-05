@@ -1,0 +1,831 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 24 24 571 818
+%%Title: Enscript Output
+%%For: Jennifer Freeman
+%%Creator: GNU enscript 1.6.1
+%%CreationDate: Tue Dec 11 13:48:37 2001
+%%Orientation: Portrait
+%%Pages: (atend)
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: (atend)
+%%EndComments
+%%BeginProlog
+%%BeginResource: procset Enscript-Prolog 1.6 1
+%
+% Procedures.
+%
+
+/_S {	% save current state
+  /_s save def
+} def
+/_R {	% restore from saved state
+  _s restore
+} def
+
+/S {	% showpage protecting gstate
+  gsave
+  showpage
+  grestore
+} bind def
+
+/MF {	% fontname newfontname -> -	make a new encoded font
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  % insert only valid encoding vectors
+  encoding_vector length 256 eq {
+    newfont /Encoding encoding_vector put
+  } if
+
+  newfontname newfont definefont pop
+} def
+
+/SF { % fontname width height -> -	set a new font
+  /height exch def
+  /width exch def
+
+  findfont
+  [width 0 0 height 0 0] makefont setfont
+} def
+
+/SUF { % fontname width height -> -	set a new user font
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF
+  /F-gs-user-font width height SF
+} def
+
+/M {moveto} bind def
+/s {show} bind def
+
+/Box {	% x y w h -> -			define box path
+  /d_h exch def /d_w exch def /d_y exch def /d_x exch def
+  d_x d_y  moveto
+  d_w 0 rlineto
+  0 d_h rlineto
+  d_w neg 0 rlineto
+  closepath
+} def
+
+/bgs {	% x y height blskip gray str -> -	show string with bg color
+  /str exch def
+  /gray exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    gray setgray
+    fill
+  grestore
+  x y M str s
+} def
+
+% Highlight bars.
+/highlight_bars {	% nlines lineheight output_y_margin gray -> -
+  gsave
+    setgray
+    /ymarg exch def
+    /lineheight exch def
+    /nlines exch def
+
+    % This 2 is just a magic number to sync highlight lines to text.
+    0 d_header_y ymarg sub 2 sub translate
+
+    /cw d_output_w cols div def
+    /nrows d_output_h ymarg 2 mul sub lineheight div cvi def
+
+    % for each column
+    0 1 cols 1 sub {
+      cw mul /xp exch def
+
+      % for each rows
+      0 1 nrows 1 sub {
+        /rn exch def
+        rn lineheight mul neg /yp exch def
+        rn nlines idiv 2 mod 0 eq {
+	  % Draw highlight bar.  4 is just a magic indentation.
+	  xp 4 add yp cw 8 sub lineheight neg Box fill
+	} if
+      } for
+    } for
+
+  grestore
+} def
+
+% Line highlight bar.
+/line_highlight {	% x y width height gray -> -
+  gsave
+    /gray exch def
+    Box gray setgray fill
+  grestore
+} def
+
+% Column separator lines.
+/column_lines {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h translate
+    /cw d_output_w cols div def
+    1 1 cols 1 sub {
+      cw mul 0 moveto
+      0 d_output_h rlineto stroke
+    } for
+  grestore
+} def
+
+% Column borders.
+/column_borders {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h moveto
+    0 d_output_h rlineto
+    d_output_w 0 rlineto
+    0 d_output_h neg rlineto
+    closepath stroke
+  grestore
+} def
+
+% Do the actual underlay drawing
+/draw_underlay {
+  ul_style 0 eq {
+    ul_str true charpath stroke
+  } {
+    ul_str show
+  } ifelse
+} def
+
+% Underlay
+/underlay {	% - -> -
+  gsave
+    0 d_page_h translate
+    d_page_h neg d_page_w atan rotate
+
+    ul_gray setgray
+    ul_font setfont
+    /dw d_page_h dup mul d_page_w dup mul add sqrt def
+    ul_str stringwidth pop dw exch sub 2 div ul_h_ptsize -2 div moveto
+    draw_underlay
+  grestore
+} def
+
+/user_underlay {	% - -> -
+  gsave
+    ul_x ul_y translate
+    ul_angle rotate
+    ul_gray setgray
+    ul_font setfont
+    0 0 ul_h_ptsize 2 div sub moveto
+    draw_underlay
+  grestore
+} def
+
+% Page prefeed
+/page_prefeed {		% bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} def
+
+% Wrapped line markers
+/wrapped_line_mark {	% x y charwith charheight type -> -
+  /type exch def
+  /h exch def
+  /w exch def
+  /y exch def
+  /x exch def
+
+  type 2 eq {
+    % Black boxes (like TeX does)
+    gsave
+      0 setlinewidth
+      x w 4 div add y M
+      0 h rlineto w 2 div 0 rlineto 0 h neg rlineto
+      closepath fill
+    grestore
+  } {
+    type 3 eq {
+      % Small arrows
+      gsave
+        .2 setlinewidth
+        x w 2 div add y h 2 div add M
+        w 4 div 0 rlineto
+        x w 4 div add y lineto stroke
+
+        x w 4 div add w 8 div add y h 4 div add M
+        x w 4 div add y lineto
+	w 4 div h 8 div rlineto stroke
+      grestore
+    } {
+      % do nothing
+    } ifelse
+  } ifelse
+} def
+
+% EPSF import.
+
+/BeginEPSF {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack
+  userdict begin
+  /showpage { } def
+  0 setgray 0 setlinecap
+  1 setlinewidth 0 setlinejoin
+  10 setmiterlimit [ ] 0 setdash newpath
+  /languagelevel where {
+    pop languagelevel
+    1 ne {
+      false setstrokeadjust false setoverprint
+    } if
+  } if
+} bind def
+
+/EndEPSF {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+%%EndResource
+%%BeginResource: procset Enscript-Encoding-88591 1.6 1
+/encoding_vector [
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclam       	/quotedbl     	/numbersign   	
+/dollar       	/percent      	/ampersand    	/quoteright   	
+/parenleft    	/parenright   	/asterisk     	/plus         	
+/comma        	/hyphen       	/period       	/slash        	
+/zero         	/one          	/two          	/three        	
+/four         	/five         	/six          	/seven        	
+/eight        	/nine         	/colon        	/semicolon    	
+/less         	/equal        	/greater      	/question     	
+/at           	/A            	/B            	/C            	
+/D            	/E            	/F            	/G            	
+/H            	/I            	/J            	/K            	
+/L            	/M            	/N            	/O            	
+/P            	/Q            	/R            	/S            	
+/T            	/U            	/V            	/W            	
+/X            	/Y            	/Z            	/bracketleft  	
+/backslash    	/bracketright 	/asciicircum  	/underscore   	
+/quoteleft    	/a            	/b            	/c            	
+/d            	/e            	/f            	/g            	
+/h            	/i            	/j            	/k            	
+/l            	/m            	/n            	/o            	
+/p            	/q            	/r            	/s            	
+/t            	/u            	/v            	/w            	
+/x            	/y            	/z            	/braceleft    	
+/bar          	/braceright   	/tilde        	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclamdown   	/cent         	/sterling     	
+/currency     	/yen          	/brokenbar    	/section      	
+/dieresis     	/copyright    	/ordfeminine  	/guillemotleft	
+/logicalnot   	/hyphen       	/registered   	/macron       	
+/degree       	/plusminus    	/twosuperior  	/threesuperior	
+/acute        	/mu           	/paragraph    	/bullet       	
+/cedilla      	/onesuperior  	/ordmasculine 	/guillemotright	
+/onequarter   	/onehalf      	/threequarters	/questiondown 	
+/Agrave       	/Aacute       	/Acircumflex  	/Atilde       	
+/Adieresis    	/Aring        	/AE           	/Ccedilla     	
+/Egrave       	/Eacute       	/Ecircumflex  	/Edieresis    	
+/Igrave       	/Iacute       	/Icircumflex  	/Idieresis    	
+/Eth          	/Ntilde       	/Ograve       	/Oacute       	
+/Ocircumflex  	/Otilde       	/Odieresis    	/multiply     	
+/Oslash       	/Ugrave       	/Uacute       	/Ucircumflex  	
+/Udieresis    	/Yacute       	/Thorn        	/germandbls   	
+/agrave       	/aacute       	/acircumflex  	/atilde       	
+/adieresis    	/aring        	/ae           	/ccedilla     	
+/egrave       	/eacute       	/ecircumflex  	/edieresis    	
+/igrave       	/iacute       	/icircumflex  	/idieresis    	
+/eth          	/ntilde       	/ograve       	/oacute       	
+/ocircumflex  	/otilde       	/odieresis    	/divide       	
+/oslash       	/ugrave       	/uacute       	/ucircumflex  	
+/udieresis    	/yacute       	/thorn        	/ydieresis    	
+] def
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Courier
+/HFpt_w 10 def
+/HFpt_h 10 def
+/Courier-Bold /HF-gs-font MF
+/HF /HF-gs-font findfont [HFpt_w 0 0 HFpt_h 0 0] makefont def
+/Courier /F-gs-font MF
+/F-gs-font 10 10 SF
+/#copies 1 def
+% Pagedevice definitions:
+gs_languagelevel 1 gt {
+  <<
+    /PageSize [595 842] 
+  >> setpagedevice
+} if
+%%BeginResource: procset Enscript-Header-simple 1.6 1
+
+/do_header {	% print default simple header
+  gsave
+    d_header_x d_header_y HFpt_h 3 div add translate
+
+    HF setfont
+    user_header_p {
+      5 0 moveto user_header_left_str show
+
+      d_header_w user_header_center_str stringwidth pop sub 2 div
+      0 moveto user_header_center_str show
+
+      d_header_w user_header_right_str stringwidth pop sub 5 sub
+      0 moveto user_header_right_str show
+    } {
+      5 0 moveto fname show
+      45 0 rmoveto fmodstr show
+      45 0 rmoveto pagenumstr show
+    } ifelse
+
+  grestore
+} def
+%%EndResource
+/d_page_w 547 def
+/d_page_h 794 def
+/d_header_x 0 def
+/d_header_y 779 def
+/d_header_w 547 def
+/d_header_h 15 def
+/d_footer_x 0 def
+/d_footer_y 0 def
+/d_footer_w 547 def
+/d_footer_h 0 def
+/d_output_w 547 def
+/d_output_h 779 def
+/cols 1 def
+%%EndSetup
+%%Page: (1) 1
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 1 def
+/fname (Port.java) def
+/fdir () def
+/ftail (Port.java) def
+% User defined strings:
+/fmodstr (Tue Dec 11 10:21:32 2001) def
+/pagenumstr (1) def
+/user_header_p true def
+/user_header_left_str (Appendix A:Port.java\(Page 1 of 1\)) def
+/user_header_center_str () def
+/user_header_right_str () def
+%%EndPageSetup
+do_header
+/Courier-Oblique 10 10 SUF
+5 766 M
+(// Port.java) s
+/F-gs-font 10 10 SF
+/Courier-Oblique 10 10 SUF
+5 755 M
+(// All code is work of Jennifer Freeman, 2001) s
+/F-gs-font 10 10 SF
+/Courier-Bold 10 10 SUF
+5 744 M
+(public) s
+/F-gs-font 10 10 SF
+41 744 M
+( ) s
+/Courier-Bold 10 10 SUF
+47 744 M
+(class) s
+/F-gs-font 10 10 SF
+77 744 M
+( Port ) s
+5 733 M
+({) s
+5 722 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 722 M
+(private) s
+/F-gs-font 10 10 SF
+71 722 M
+( ) s
+/Courier-Bold 10 10 SUF
+77 722 M
+(int) s
+/F-gs-font 10 10 SF
+95 722 M
+( port;) s
+5 711 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 711 M
+(public) s
+/F-gs-font 10 10 SF
+65 711 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 711 M
+(static) s
+/F-gs-font 10 10 SF
+107 711 M
+( ) s
+/Courier-Bold 10 10 SUF
+113 711 M
+(final) s
+/F-gs-font 10 10 SF
+143 711 M
+( Port PortA=) s
+/Courier-Bold 10 10 SUF
+215 711 M
+(new) s
+/F-gs-font 10 10 SF
+233 711 M
+( Port \() s
+/Courier-Bold 10 10 SUF
+275 711 M
+("a") s
+/F-gs-font 10 10 SF
+293 711 M
+(\);) s
+5 700 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 700 M
+(public) s
+/F-gs-font 10 10 SF
+65 700 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 700 M
+(static) s
+/F-gs-font 10 10 SF
+107 700 M
+( ) s
+/Courier-Bold 10 10 SUF
+113 700 M
+(final) s
+/F-gs-font 10 10 SF
+143 700 M
+( Port PortB=) s
+/Courier-Bold 10 10 SUF
+215 700 M
+(new) s
+/F-gs-font 10 10 SF
+233 700 M
+( Port \() s
+/Courier-Bold 10 10 SUF
+275 700 M
+("b") s
+/F-gs-font 10 10 SF
+293 700 M
+(\);) s
+5 689 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 689 M
+(public) s
+/F-gs-font 10 10 SF
+65 689 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 689 M
+(static) s
+/F-gs-font 10 10 SF
+107 689 M
+( ) s
+/Courier-Bold 10 10 SUF
+113 689 M
+(final) s
+/F-gs-font 10 10 SF
+143 689 M
+( Port NoPort=) s
+/Courier-Bold 10 10 SUF
+221 689 M
+(new) s
+/F-gs-font 10 10 SF
+239 689 M
+( Port \() s
+/Courier-Bold 10 10 SUF
+281 689 M
+(null) s
+/F-gs-font 10 10 SF
+305 689 M
+(\);) s
+5 667 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 667 M
+(public) s
+/F-gs-font 10 10 SF
+65 667 M
+( Port \(String b\)) s
+5 656 M
+(    {   ) s
+5 645 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 645 M
+(if) s
+/F-gs-font 10 10 SF
+65 645 M
+( \(b==) s
+/Courier-Bold 10 10 SUF
+95 645 M
+(null) s
+/F-gs-font 10 10 SF
+119 645 M
+(\) {port=3;) s
+/Courier-Bold 10 10 SUF
+179 645 M
+(return) s
+/F-gs-font 10 10 SF
+215 645 M
+(;}) s
+5 634 M
+(        String t=b.toLowerCase\(\);) s
+5 623 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 623 M
+(if) s
+/F-gs-font 10 10 SF
+65 623 M
+( \(t.equals\() s
+/Courier-Bold 10 10 SUF
+131 623 M
+("a") s
+/F-gs-font 10 10 SF
+149 623 M
+(\)\)) s
+5 612 M
+(        { port=1; } ) s
+/Courier-Bold 10 10 SUF
+125 612 M
+(else) s
+/F-gs-font 10 10 SF
+5 601 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 601 M
+(if) s
+/F-gs-font 10 10 SF
+65 601 M
+( \(t.equals\() s
+/Courier-Bold 10 10 SUF
+131 601 M
+("b") s
+/F-gs-font 10 10 SF
+149 601 M
+(\)\)) s
+5 590 M
+(        { port=2; } ) s
+/Courier-Bold 10 10 SUF
+125 590 M
+(else) s
+/F-gs-font 10 10 SF
+5 579 M
+(        { port=3; }) s
+5 568 M
+(    }) s
+5 557 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 557 M
+(public) s
+/F-gs-font 10 10 SF
+65 557 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 557 M
+(boolean) s
+/F-gs-font 10 10 SF
+113 557 M
+( isPortA\(\)) s
+5 546 M
+(    {) s
+5 535 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 535 M
+(return) s
+/F-gs-font 10 10 SF
+89 535 M
+( port==1;) s
+5 524 M
+(    }) s
+5 513 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 513 M
+(public) s
+/F-gs-font 10 10 SF
+65 513 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 513 M
+(boolean) s
+/F-gs-font 10 10 SF
+113 513 M
+( isPortB\(\)) s
+5 502 M
+(    {   ) s
+5 491 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 491 M
+(return) s
+/F-gs-font 10 10 SF
+89 491 M
+( port==2;) s
+5 480 M
+(    }) s
+5 469 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 469 M
+(public) s
+/F-gs-font 10 10 SF
+65 469 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 469 M
+(boolean) s
+/F-gs-font 10 10 SF
+113 469 M
+( isNoPort\(\)) s
+5 458 M
+(    {) s
+5 447 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 447 M
+(return) s
+/F-gs-font 10 10 SF
+89 447 M
+( port==3;) s
+5 436 M
+(    }) s
+5 425 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 425 M
+(public) s
+/F-gs-font 10 10 SF
+65 425 M
+( ) s
+/Courier-Bold 10 10 SUF
+71 425 M
+(boolean) s
+/F-gs-font 10 10 SF
+113 425 M
+( equals\(Object bob\)) s
+5 414 M
+(    {   ) s
+5 403 M
+(        Port gid;) s
+5 392 M
+(        gid=\(Port\) bob;) s
+/Courier-Oblique 10 10 SUF
+5 381 M
+(//        System.out.println\(\(port==gid.port\)+":"+this+":"+gid\);) s
+/F-gs-font 10 10 SF
+5 370 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 370 M
+(if) s
+/F-gs-font 10 10 SF
+65 370 M
+( \(port==3 || gid.port==3\) ) s
+/Courier-Bold 10 10 SUF
+221 370 M
+(return) s
+/F-gs-font 10 10 SF
+257 370 M
+( ) s
+/Courier-Bold 10 10 SUF
+263 370 M
+(true) s
+/F-gs-font 10 10 SF
+287 370 M
+(;) s
+5 359 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 359 M
+(return) s
+/F-gs-font 10 10 SF
+89 359 M
+( \(port==\(gid.port\)\);) s
+5 348 M
+(    }) s
+5 337 M
+(    ) s
+/Courier-Bold 10 10 SUF
+29 337 M
+(public) s
+/F-gs-font 10 10 SF
+65 337 M
+( String toString\(\)) s
+5 326 M
+(    {) s
+5 315 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 315 M
+(if) s
+/F-gs-font 10 10 SF
+65 315 M
+( \(isPortA\(\)\) ) s
+/Courier-Bold 10 10 SUF
+143 315 M
+(return) s
+/F-gs-font 10 10 SF
+179 315 M
+( ) s
+/Courier-Bold 10 10 SUF
+185 315 M
+("port A") s
+/F-gs-font 10 10 SF
+233 315 M
+(;) s
+5 304 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 304 M
+(if) s
+/F-gs-font 10 10 SF
+65 304 M
+( \(isPortB\(\)\) ) s
+/Courier-Bold 10 10 SUF
+143 304 M
+(return) s
+/F-gs-font 10 10 SF
+179 304 M
+( ) s
+/Courier-Bold 10 10 SUF
+185 304 M
+("port B") s
+/F-gs-font 10 10 SF
+233 304 M
+(;) s
+5 293 M
+(        ) s
+/Courier-Bold 10 10 SUF
+53 293 M
+(return) s
+/F-gs-font 10 10 SF
+89 293 M
+( ) s
+/Courier-Bold 10 10 SUF
+95 293 M
+("No Port") s
+/F-gs-font 10 10 SF
+149 293 M
+(;) s
+5 282 M
+(    }) s
+5 271 M
+(}) s
+_R
+S
+%%Trailer
+%%Pages: 1
+%%DocumentNeededResources: font Courier-Oblique Courier-Bold Courier 
+%%EOF
