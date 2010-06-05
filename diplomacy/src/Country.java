@@ -57,7 +57,6 @@ public class Country
     }
     public TreeSet<Move> getFleetMoves(Port g)
     {
-        Iterator b;
         TreeSet<Move> myseas, a=new TreeSet<Move>();
       
         /* Unable to have a fleet when it is a landlocked square */
@@ -91,13 +90,13 @@ public class Country
    // Get army moves.
    public TreeSet<Move> getArmyMoves()
    {
-        Iterator g;
         TreeSet<Move> foo=new TreeSet<Move>();
+     
+        /* Cannot have army moves on the sea */
         if (type.isSea()) return foo;
-        g=links.iterator();
-        while (g.hasNext())
+     
+        for (Move x : links)
         {
-           Move x=(Move) g.next();
            String y=x.getCountry();
            LandType f;
            Country s;
@@ -105,17 +104,15 @@ public class Country
            f=s.getType();
            if (f.isCoast() || f.isLand()) foo.add(x);
          }
+     
          return foo;
     }
     // Get seas we can move from.
     public TreeSet<Move> getSeas(Port gool)
     {
-        Iterator g;
         TreeSet<Move> foo=new TreeSet<Move>();
-        g=links.iterator();
-        while (g.hasNext())
+        for (Move x : links)
         {
-           Move x=(Move) g.next();
            if ((gool.equals(x.getPortFrom()))==true)
            { 
              String y=(String) x.getCountry();
@@ -131,12 +128,9 @@ public class Country
     // Get seas we can move to.
     public TreeSet<Move> getSeasReverse(Port gool)
     {
-        Iterator g;
         TreeSet<Move> foo=new TreeSet<Move>();
-        g=links.iterator();
-        while (g.hasNext())
+        for (Move x : links)
         {
-           Move x=(Move) g.next();
            if ((gool.equals(x.getPortTo()))==true)
            { 
              String y=(String) x.getCountry();
@@ -154,13 +148,9 @@ public class Country
     public String getFullDetails()
     {
         String result;
-        Iterator bar;
         result=this.toString()+"\n";
-        bar=links.iterator();
-        while (bar.hasNext())
-        {            
-            Move x;
-            x=(Move) bar.next();
+        for (Move x : links)
+        { 
             result+="   "+(Map.getCountry(x.getCountry()))+"\n";
         }
         return result;

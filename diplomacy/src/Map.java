@@ -3,7 +3,7 @@
 import java.util.*;
 public abstract class Map
 {
-   private static TreeMap map=new TreeMap();
+   private static TreeMap<String, Country> map=new TreeMap<String, Country>();
    
    public static void addCountry(String shortname,String pa,String pb,
                                   String longname,String type,boolean supply)
@@ -13,7 +13,7 @@ public abstract class Map
    }
    public static Country getCountry(String shortname)
    {
-     return (Country) map.get(shortname.toLowerCase());
+     return map.get(shortname.toLowerCase());
    }
    public static Object[] getValues()
    {
