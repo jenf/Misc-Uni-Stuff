@@ -16,9 +16,9 @@ public abstract class Map
      return map.get(shortname.toLowerCase());
    }
    
-   public static Object[] getValues()
+   public static String[] getValues()
    {
-     return map.keySet().toArray();
+     return (String[]) map.keySet().toArray();
    }
    // Java doesn't like static toStrings 
    public static String show()

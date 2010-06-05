@@ -14,7 +14,7 @@ class DipGui extends JFrame
     private GridLayout gah;
     private Box moo;
     private JPanel moo2;
-    private Object[] m;
+    private String[] m;
     public DipGui()
     {
         setTitle("DipGui");

@@ -133,7 +133,7 @@ public class Diplomacy extends DefaultHandler {
             // The following three lines are mine
             xmlReader.parse(convertToFileURL("./diplomacy.xml"));
             JFrame frame=new DipGui();
-            frame.show();
+            frame.setVisible(true);
         } catch (SAXException se) {
             System.err.println(se.getMessage());
             System.exit(1);
