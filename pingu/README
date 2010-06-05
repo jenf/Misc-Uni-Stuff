@@ -1,0 +1,63 @@
+To Build
+
+Requirements
+
+GTK 2.0 or later
+
+Type make
+
+I have only tested it on redhat 9 linux boxes, on other things your milage
+may vary.
+
+
+To Run
+
+./pingu upstreamhost directory
+
+where directory is the directory which you want files to be served
+
+it will put downloads in ../downloads
+
+Implementation Notes
+
+The server is split into many threads
+
+One thread for each upstream to cope with ping pongs
+One thread for the listening socket
+One thread to monitor the directory which you serve files from (doesn't work 
+fully) and to timeout requests
+One thread per upload
+One thread per download
+One thread for the GUI
+One thread while processing a request
+
+To save on thread creation time they use threadpools to share inactive threads
+between those which need it.
+
+When the listening socket recieves a ping from a server it does not know about
+it adds it to the list of known servers and starts up a new thread to ping it
+every 5 seconds and sees if it has timed out (not recieved a pong). If it has 
+not recieved a pong within 30 seconds it removes it from the list of sockets.
+
+When the user makes a search they enter a search filename in the GUI, with glob 
+characters such as * etc, this then asks all the servers in it's known servers
+to do a search, this is then past to their known servers until the hop count 
+(presently 3) runs out.
+
+If they find a file matching that glob then the client sends back a packet to the 
+origin of the request. This is can be directly because it uses UDP.
+
+The server the request came from locally asks the request handler to inform it 
+off timeouts so that it knows when to give up searching for that packet. It 
+also uses a unique request number so that multiple searches can be done at one 
+time.
+
+One of the issues when creating this was that it is complex to find out your 
+real ip address the one the outside world sees, since NAT can completly change 
+the IP. To make this work the originator puts 0.0.0.0 as their ip address and 
+the other ends fills it in with what recvfrom tells them is the correct ip 
+address. (There are other flaws which make it not run from behind NAT boxes)
+
+If the servlet runs out of IP addresses, it looks at it's possible list, if the possible
+list is empty it asks the user for another ip address. If it has possible entries it adds
+the first 5 to the list of active hosts and attempts to ping/pong it.

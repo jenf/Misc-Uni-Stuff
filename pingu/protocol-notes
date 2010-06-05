@@ -1,0 +1,8 @@
+Requesting a specific file
+
+1. You send request_md5sum to the client who sent you the response.
+2. The client can either
+   Send you a file_found
+   	which includes port number to access
+   Send you a file_not_found
+   	which says that the file isn't there (deleted or server problems)

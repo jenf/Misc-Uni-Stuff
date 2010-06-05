@@ -1,0 +1,43 @@
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netinet/udp.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+
+#define MAXBUF 1024
+int main(void)
+{
+	struct sockaddr_in server,client;
+	char buffer[MAXBUF];
+	int i,sock,bytes;
+	if ((sock=socket(PF_INET,SOCK_DGRAM,0))<0)
+	{
+		perror("socket");
+		exit(1);
+	}
+	server.sin_family=AF_INET;
+	server.sin_port=htons(3773);
+	server.sin_addr.s_addr=inet_addr("127.0.0.1");
+	strcpy(buffer,"All I wanna do is have some fun");	
+	while (1)
+	{
+		bytes=sendto(sock,buffer,strlen(buffer),0,&server,sizeof(server));
+		printf("%i\n",bytes);
+		if (bytes<0)
+		{
+			perror("sendto");
+			exit(1);
+		}
+		sleep(3);
+	}
+	close(sock);
+	
+}
