@@ -10,7 +10,7 @@ public class Country
     private String portb;
     private LandType type;
     private boolean supply;
-    private TreeSet links;
+    private TreeSet<Move> links;
     private boolean checked;
     public Country (String lon, String pa,String pb, LandType t,boolean sup)
     {
@@ -19,27 +19,25 @@ public class Country
         portb=pb;
         type=t;
         supply=sup;
-        links=new TreeSet();
+        links=new TreeSet<Move>();
     }
     // Consistancy Checker
     public void check()
     {
-        Iterator g;
-        TreeSet foo=new TreeSet();
-        g=links.iterator();
-        checked=true;
-        while (g.hasNext())
+      checked = true;
+      for (Move a : links)
+      {
+        Country bar;
+        bar=Map.getCountry(a.getCountry());
+        if (bar==null)
         {
-          Move a;
-          Country bar;
-          a=(Move) g.next();
-          bar=Map.getCountry(a.getCountry());
-          if (bar==null) {System.out.println("Bad Entry in "+longname+a);}
-          else
-          {
-            if (bar.check_foo()==false) bar.check();
-          }
+         System.out.println("Bad Entry in "+longname+a);
         }
+        else
+        {
+          if (bar.check_foo()==false) bar.check();
+        }
+      }
     }
     public boolean check_foo()
     {               
@@ -57,22 +55,22 @@ public class Country
     {
         links.add(neighbour);
     }
-    public TreeSet getFleetMoves(Port g)
+    public TreeSet<Move> getFleetMoves(Port g)
     {
         Iterator b;
-        TreeSet myseas, a=new TreeSet();
+        TreeSet<Move> myseas, a=new TreeSet<Move>();
+      
+        /* Unable to have a fleet when it is a landlocked square */
         if (type.isLand()) return a;
+      
         myseas=this.getSeas(g);
-        b=myseas.iterator();
-        while (b.hasNext())
+        for (Move x : myseas)
         {
             Country s;
-            TreeSet seas;
+            TreeSet<Move> seas;
             LandType f;
             Iterator bob;
             String y;
-            Move x;
-            x=(Move) b.next();
             y=x.getCountry();
             s=Map.getCountry(y);
             seas=s.getSeasReverse(g);
@@ -89,11 +87,12 @@ public class Country
         }
         return a;
     }
+  
    // Get army moves.
-   public TreeSet getArmyMoves()
+   public TreeSet<Move> getArmyMoves()
    {
         Iterator g;
-        TreeSet foo=new TreeSet();
+        TreeSet<Move> foo=new TreeSet<Move>();
         if (type.isSea()) return foo;
         g=links.iterator();
         while (g.hasNext())
@@ -109,10 +108,10 @@ public class Country
          return foo;
     }
     // Get seas we can move from.
-    public TreeSet getSeas(Port gool)
+    public TreeSet<Move> getSeas(Port gool)
     {
         Iterator g;
-        TreeSet foo=new TreeSet();
+        TreeSet<Move> foo=new TreeSet<Move>();
         g=links.iterator();
         while (g.hasNext())
         {
@@ -130,10 +129,10 @@ public class Country
          return foo;
     }
     // Get seas we can move to.
-    public TreeSet getSeasReverse(Port gool)
+    public TreeSet<Move> getSeasReverse(Port gool)
     {
         Iterator g;
-        TreeSet foo=new TreeSet();
+        TreeSet<Move> foo=new TreeSet<Move>();
         g=links.iterator();
         while (g.hasNext())
         {
