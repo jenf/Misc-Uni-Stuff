@@ -37,8 +37,15 @@ public class Diplomacy extends DefaultHandler {
          pa=attrs.getValue("coastA");
          pb=attrs.getValue("coastB");
          currentcountry=attrs.getValue("short");
-         Map.addCountry(currentcountry,pa,pb,attrs.getValue("name"),
+         try
+         {
+          Map.addCountry(currentcountry,pa,pb,attrs.getValue("name"),
                          attrs.getValue("type"),foo);
+         }
+         catch (java.lang.Exception exception)
+         {
+        	 System.out.println(exception.toString());
+         }
         }
         if (qName.equals("neighbour"))
         {

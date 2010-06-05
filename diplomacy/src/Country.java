@@ -60,7 +60,7 @@ public class Country
         TreeSet<Move> myseas, a=new TreeSet<Move>();
       
         /* Unable to have a fleet when it is a landlocked square */
-        if (type.isLand()) return a;
+        if (type==LandType.Land) return a;
       
         myseas=this.getSeas(g);
         for (Move x : myseas)
@@ -68,20 +68,19 @@ public class Country
             Country s;
             TreeSet<Move> seas;
             LandType f;
-            Iterator bob;
             String y;
             y=x.getCountry();
             s=Map.getCountry(y);
             seas=s.getSeasReverse(g);
             f=s.getType();
-            if (f.isCoast())
+            if (f==LandType.Coast)
             {
               seas.retainAll(myseas);
               if (seas.size()>0) a.add(x);
             }
             else
             {
-              if (f.isSea()) a.add(x);
+              if (f==LandType.Sea) a.add(x);
             }
         }
         return a;
@@ -93,7 +92,7 @@ public class Country
         TreeSet<Move> foo=new TreeSet<Move>();
      
         /* Cannot have army moves on the sea */
-        if (type.isSea()) return foo;
+        if (type==LandType.Sea) return foo;
      
         for (Move x : links)
         {
@@ -102,7 +101,10 @@ public class Country
            Country s;
            s=Map.getCountry(y);
            f=s.getType();
-           if (f.isCoast() || f.isLand()) foo.add(x);
+           if (f==LandType.Coast || f==LandType.Land)
+           {
+        	   foo.add(x);
+           }
          }
      
          return foo;
@@ -115,12 +117,15 @@ public class Country
         {
            if ((gool.equals(x.getPortFrom()))==true)
            { 
-             String y=(String) x.getCountry();
+             String y=x.getCountry();
              LandType f;
              Country s;
              s=Map.getCountry(y);
              f=s.getType();
-             if (f.isSea() || f.isCoast()) foo.add(x);
+             if (f==LandType.Sea || f==LandType.Coast)
+             {
+            	 foo.add(x);
+             }
             }
          }
          return foo;
@@ -133,12 +138,15 @@ public class Country
         {
            if ((gool.equals(x.getPortTo()))==true)
            { 
-             String y=(String) x.getCountry();
+             String y=x.getCountry();
              LandType f;
              Country s;
              s=Map.getCountry(y);
              f=s.getType();
-             if (f.isSea() || f.isCoast()) foo.add(x);
+             if (f==LandType.Sea || f==LandType.Coast)
+             {
+            	 foo.add(x);
+             }
             }
          }
          return foo;
