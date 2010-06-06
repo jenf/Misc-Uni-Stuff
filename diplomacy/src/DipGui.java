@@ -10,11 +10,12 @@ class DipGui extends JFrame
     private JList fleet_moves;
     private JList army_moves;
     private JLabel info,me;
-    private JScrollPane bar,army_bar,fleet_bar;
-    private GridLayout gah;
-    private Box moo;
-    private JPanel moo2;
-    private String[] m;
+    private JScrollPane pane,army_pane,fleet_pane;
+    private GridLayout gridlayout;
+    private Box box;
+    private JPanel panel;
+    private String[] current_country;
+    
     public DipGui()
     {
         setTitle("DipGui");
@@ -24,13 +25,13 @@ class DipGui extends JFrame
 			{ System.exit(0);
 			}
 		} );
-        m=Map.getValues();
+        current_country=Map.getValues();
         Container contentPane=this.getContentPane();
 
 
 
 
-        list=new JList(m);
+        list=new JList(current_country);
         info=new JLabel();
         army_moves=new JList();
         fleet_moves=new JList();
@@ -40,33 +41,33 @@ class DipGui extends JFrame
           { 
             Country n;
             int index = list.locationToIndex(e.getPoint());
-            n=Map.getCountry((String) m[index]);
+            n=Map.getCountry(current_country[index]);
             info.setText(n.getName());
             army_moves.setListData(n.getArmyMoves().toArray());
             fleet_moves.setListData(n.getFleetMoves(Port.NoPort).toArray());
           }
         };
         list.addMouseListener(mouseListener);
-        bar=new JScrollPane(list);
-        bar.setPreferredSize(new Dimension(400, 100));
-        fleet_bar=new JScrollPane(fleet_moves);
-        army_bar=new JScrollPane(army_moves);
-        moo2=new JPanel();
-        gah=new GridLayout(1,2);
-        gah.setHgap(5);
-        gah.setVgap(5);
-        moo2.setLayout(gah);
-        moo2.add(bar);
-        moo=Box.createVerticalBox();
-        moo2.add(moo);
-        moo.add(info);
+        pane=new JScrollPane(list);
+        pane.setPreferredSize(new Dimension(400, 100));
+        fleet_pane=new JScrollPane(fleet_moves);
+        army_pane=new JScrollPane(army_moves);
+        panel=new JPanel();
+        gridlayout=new GridLayout(1,2);
+        gridlayout.setHgap(5);
+        gridlayout.setVgap(5);
+        panel.setLayout(gridlayout);
+        panel.add(pane);
+        box=Box.createVerticalBox();
+        panel.add(box);
+        box.add(info);
         me=new JLabel("Fleet:");
-        moo.add(me);
-        moo.add(fleet_bar);
+        box.add(me);
+        box.add(fleet_pane);
         me=new JLabel("Army:");
-        moo.add(me);
-        moo.add(army_bar);
-        contentPane.add(moo2);
+        box.add(me);
+        box.add(army_pane);
+        contentPane.add(panel);
     }
 }
 

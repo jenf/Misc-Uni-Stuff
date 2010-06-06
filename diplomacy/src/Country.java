@@ -69,9 +69,11 @@ public class Country
             TreeSet<Move> seas;
             LandType f;
             String y;
+            
             y=x.getCountry();
             s=Map.getCountry(y);
             seas=s.getSeasReverse(g);
+            
             f=s.getType();
             if (f==LandType.Coast)
             {
